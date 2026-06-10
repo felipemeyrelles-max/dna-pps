@@ -1,0 +1,471 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HOME | DNA PPS — Planejamento Patrimonial e Sucessório</title>
+<meta name="description" content="O Inventário é um problema e a DNA PPS pode evitá-lo. Planejamento Patrimonial e Sucessório para proteger seu patrimônio e reduzir custos." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&family=Wix+Madefor+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+   DNA PPS — Reconstrução fiel da LP (fora do Wix)
+   Única mudança funcional vs. site atual: seção de simulação => calculadora ITCMD interativa
+   ========================================================================= */
+:root{
+  --dark:#1b1a16;
+  --darker:#070709;
+  --ouro:#d9b44a;
+  --peri-1:#2e3e72; --peri-2:#4954d8; --peri-3:#6573ee;
+  --txt:#ffffff;
+  --display:"Wix Madefor Display","Helvetica Neue",Arial,sans-serif;
+  --text:"Wix Madefor Text","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--text);color:var(--txt);background:var(--darker);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(20px,5vw,64px)}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.15;letter-spacing:-.01em}
+
+/* ---------- Botão pílula contornado ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:28px;justify-content:space-between;
+  border:1px solid rgba(255,255,255,.55);border-radius:50px;
+  padding:14px 26px;font-family:var(--text);font-size:.92rem;color:#fff;
+  background:transparent;cursor:pointer;transition:.25s;min-width:230px;
+}
+.btn:hover{background:#fff;color:var(--dark);border-color:#fff}
+.btn svg{width:34px;height:12px;flex:none}
+.btn.dark{border-color:rgba(0,0,0,.5);color:#1b1a16}
+.btn.dark:hover{background:#1b1a16;color:#fff;border-color:#1b1a16}
+
+/* ---------- Header ---------- */
+header{position:fixed;top:0;left:0;width:100%;z-index:50;background:rgba(27,26,22,.97);backdrop-filter:blur(6px)}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:74px}
+.nav{display:flex;gap:30px}
+.nav a{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;opacity:.92;transition:.2s}
+.nav a:hover{color:var(--ouro)}
+.brand{display:flex;align-items:center;gap:14px}
+.brand img{height:46px;width:auto;border-radius:3px}
+.brand .bt{font-family:var(--display);font-size:1.05rem;line-height:1.15;font-weight:500}
+.burger{display:none;background:none;border:0;color:#fff;font-size:1.6rem;cursor:pointer}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden}
+.hero video,.hero .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero::after{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(15,14,12,.55) 0%,rgba(15,14,12,.25) 45%,rgba(15,14,12,.85) 100%)}
+.hero .wrap{position:relative;z-index:2;padding-bottom:clamp(60px,10vh,120px);width:100%}
+.hero h1{font-size:clamp(2rem,4.6vw,3rem);max-width:14ch;margin-bottom:22px}
+.hero p{font-size:clamp(1rem,1.5vw,1.18rem);max-width:60ch;color:rgba(255,255,255,.9);margin-bottom:30px;line-height:1.6}
+
+/* ---------- Bloco texto+mídia (seções marrom) ---------- */
+.warm{background:linear-gradient(180deg,#17110b 0%,#3d2a1c 22%,#7d5641 45%,#9b705d 58%,#5f4030 80%,#221710 100%)}
+.media-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,90px);align-items:center;padding:clamp(50px,8vw,100px) 0}
+.media-row .media{border-radius:6px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45);aspect-ratio:16/11;background:#000}
+.media-row .media video,.media-row .media img{width:100%;height:100%;object-fit:cover}
+.media-row h2{font-size:clamp(1.6rem,3vw,2.3rem);margin-bottom:20px}
+.media-row p{font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,.9);margin-bottom:26px}
+.media-row.rev .media{order:2}
+
+/* ---------- Pilares ---------- */
+.dark-sec{background:var(--darker);padding:clamp(60px,9vw,120px) 0}
+.pilares{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center}
+.pilares h2{font-size:clamp(1.8rem,3.4vw,2.6rem);margin-bottom:36px}
+.pilares ul{list-style:none;display:flex;flex-direction:column;gap:26px}
+.pilares li{display:flex;align-items:center;gap:20px;font-size:1.15rem}
+.pilares li span.ic{width:46px;height:30px;flex:none;border-left:2px solid var(--ouro);border-bottom:2px solid var(--ouro)}
+.pilares .vid{border-radius:8px;overflow:hidden;aspect-ratio:1/1;background:#000;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.pilares .vid video,.pilares .vid img{width:100%;height:100%;object-fit:cover}
+
+/* ---------- Soluções (6 cards) ---------- */
+.sol-head{text-align:center;margin-bottom:50px}
+.sol-head h2{font-size:clamp(1.8rem,3.4vw,2.6rem)}
+.sol-head .div{width:46px;height:2px;background:var(--ouro);margin:20px auto 0}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden}
+.card{background:var(--darker);padding:34px 30px;display:flex;justify-content:space-between;gap:20px;align-items:flex-start;min-height:150px}
+.card h3{font-size:1.25rem;margin-bottom:12px;color:#fff}
+.card p{font-size:.95rem;line-height:1.6;color:rgba(255,255,255,.72)}
+.card .ci{width:42px;height:42px;flex:none;opacity:.85;stroke:var(--ouro)}
+
+/* ---------- Simulação / Calculadora (periwinkle) ---------- */
+#solucoes{background:#0e1228}
+.sim{background:linear-gradient(180deg,var(--peri-1) 0%,var(--peri-2) 50%,var(--peri-3) 100%);padding:clamp(56px,8vw,104px) 0}
+.sim>.wrap{max-width:1080px}
+.sim .sim-title{text-align:center;max-width:24ch;margin:0 auto clamp(30px,5vw,46px);font-size:clamp(1.5rem,3vw,2.15rem)}
+.calc-form{display:grid;grid-template-columns:1.2fr 1fr 1.2fr;gap:16px;max-width:900px;margin:0 auto clamp(22px,3.5vw,32px)}
+.fld{display:flex;flex-direction:column;gap:8px;text-align:left}
+.fld label{font-size:.82rem;font-weight:500;color:rgba(255,255,255,.92)}
+.fld label small{display:block;font-weight:400;font-size:.72rem;color:rgba(255,255,255,.62);margin-top:2px}
+.fld input,.fld select{width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.28);border-radius:12px;padding:14px 16px;color:#fff;font-family:var(--text);font-size:1rem;font-weight:500;outline:none;transition:.18s}
+.fld input::placeholder{color:rgba(255,255,255,.5);font-weight:400}
+.fld input:focus,.fld select:focus{border-color:var(--ouro);background:rgba(255,255,255,.16)}
+.fld select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:42px}
+.fld select option{color:#1a1a1a}
+.calc-result{display:grid;grid-template-columns:1fr 1fr;border-radius:18px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);max-width:900px;margin:0 auto}
+.col-head{background:#0b0b0d;color:var(--ouro);text-align:center;font-weight:600;font-size:1.02rem;padding:18px 14px}
+.col-body{padding:26px 22px 30px;min-height:250px;display:flex;flex-direction:column;gap:18px}
+.col-inv .col-body{background:linear-gradient(180deg,#7d7d80,#6c6c70);color:#fff}
+.col-plan .col-body{background:#f3f3f5;color:#2b2b2b}
+.line{display:flex;flex-direction:column;gap:3px}
+.line .k{font-size:.8rem;opacity:.85}
+.line .v{font-size:1.06rem;font-weight:600}
+.col-plan .line .v{color:#13693c}
+.dv{height:1px;background:rgba(255,255,255,.22);margin:2px 0}
+.col-plan .dv{background:rgba(0,0,0,.1)}
+.tot{margin-top:auto}
+.tot .k{font-size:.84rem;opacity:.9;font-weight:500}
+.tot .v{font-size:1.5rem;font-weight:700}
+.col-inv .tot .v{color:#fff}.col-plan .tot .v{color:#0f7a43}
+.eco{max-width:900px;margin:22px auto 0;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.22);border-radius:16px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.eco .lbl{font-size:.95rem;font-weight:500;color:rgba(255,255,255,.88)}
+.eco .big{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:700;color:var(--ouro)}
+.eco .pct{font-size:.85rem;color:rgba(255,255,255,.7)}
+.sim-disc{max-width:900px;margin:18px auto 0;font-size:.76rem;line-height:1.55;color:rgba(255,255,255,.62);text-align:center}
+.sim-cta{text-align:center;margin-top:30px}
+
+/* ---------- Quem somos ---------- */
+.quem{text-align:center;max-width:880px;margin:0 auto}
+.quem h2{font-size:clamp(1.8rem,3.4vw,2.6rem);margin-bottom:26px;order:-1}
+.quem p{font-size:1.08rem;line-height:1.8;color:rgba(255,255,255,.82)}
+
+/* ---------- Diretores ---------- */
+.dirs{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;max-width:1000px;margin:0 auto}
+.dir{text-align:center}
+.dir img{width:100%;aspect-ratio:317/408;object-fit:cover;border-radius:6px;margin-bottom:18px;filter:grayscale(.1)}
+.dir h3{font-size:1.15rem;margin-bottom:4px}
+.dir p{font-size:.9rem;color:rgba(255,255,255,.6)}
+
+/* ---------- Parceiros ---------- */
+.parc{text-align:center}
+.parc h3{font-size:1.4rem;margin-bottom:26px;color:rgba(255,255,255,.85)}
+.parc img{height:84px;width:auto;margin:0 auto;opacity:.95}
+
+/* ---------- Form ---------- */
+.formsec{background:#fff;color:#1b1a16;padding:clamp(60px,8vw,110px) 0}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,80px);align-items:center}
+.formgrid h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:16px;color:#1b1a16}
+.formgrid p{color:#555;font-size:1.05rem}
+.lead-form{display:flex;flex-direction:column;gap:18px;background:#13132a;padding:34px;border-radius:14px}
+.lead-form .ff{display:flex;flex-direction:column;gap:7px}
+.lead-form label{font-size:.85rem;color:rgba(255,255,255,.85)}
+.lead-form input{padding:13px 15px;border-radius:9px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;font-family:var(--text);font-size:1rem;outline:none}
+.lead-form input:focus{border-color:var(--peri-3)}
+.lead-form button{margin-top:6px;padding:14px;border:0;border-radius:9px;background:#3b41d6;color:#fff;font-family:var(--text);font-size:1rem;font-weight:600;cursor:pointer;transition:.2s}
+.lead-form button:hover{background:#2c32c4}
+.lead-form .ok{display:none;color:#7ee2a8;font-size:.95rem;text-align:center;padding:8px}
+
+/* ---------- Footer ---------- */
+footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
+.ft-logo{font-family:var(--display);font-size:2.4rem;font-weight:700;letter-spacing:.05em;margin-bottom:26px}
+.ft-mail{font-size:1rem;color:rgba(255,255,255,.85);margin-bottom:18px}
+.ft-mail a{color:var(--ouro)}
+.ft-social{display:flex;gap:16px;margin-bottom:26px}
+.ft-social a{width:40px;height:40px;display:grid;place-items:center;background:rgba(255,255,255,.06);border-radius:50%;transition:.2s}
+.ft-social a:hover{background:rgba(255,255,255,.16)}
+.ft-social img{width:20px;height:20px}
+.ft-addr{font-size:.92rem;color:rgba(255,255,255,.6);margin-bottom:30px;max-width:50ch}
+.ft-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:.85rem;color:rgba(255,255,255,.55)}
+.ft-bottom .links{display:flex;gap:24px}
+
+/* ---------- WhatsApp flutuante ---------- */
+.wa{position:fixed;right:22px;bottom:22px;z-index:60;width:58px;height:58px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:.2s}
+.wa:hover{transform:scale(1.06)}
+.wa svg{width:32px;height:32px;fill:#fff}
+
+/* ---------- Responsivo ---------- */
+@media (max-width:860px){
+  .nav{display:none}
+  .burger{display:block}
+  .media-row,.pilares,.cards,.formgrid{grid-template-columns:1fr}
+  .media-row.rev .media{order:0}
+  .calc-form{grid-template-columns:1fr;max-width:440px}
+  .calc-result{grid-template-columns:1fr;max-width:440px}
+  .col-inv{order:1}.col-plan{order:2}
+  .dirs{grid-template-columns:1fr;max-width:360px}
+  .eco{flex-direction:column;text-align:center;gap:6px}
+  .brand .bt{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header>
+  <div class="wrap hd">
+    <nav class="nav">
+      <a href="#topo">PLANEJAMENTO</a>
+      <a href="#solucoes">SOLUÇÕES</a>
+      <a href="#simulacao">SIMULAÇÃO</a>
+      <a href="#contato">CONTATOS</a>
+    </nav>
+    <div class="brand">
+      <img src="logo-dna.jpeg" alt="DNA PPS" />
+      <div class="bt">Planejamento Patrimonial<br>e Sucessório</div>
+    </div>
+    <button class="burger" aria-label="Menu" onclick="document.querySelector('.nav').style.display=(getComputedStyle(document.querySelector('.nav')).display==='none'?'flex':'none')">☰</button>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="topo">
+  <video autoplay muted loop playsinline poster="hero-poster.jpg">
+    <source src="hero.mp4" type="video/mp4">
+  </video>
+  <div class="wrap">
+    <h1>O Inventário é um problema e a DNA PPS pode evitá-lo</h1>
+    <p>Perder um ente querido nunca é fácil, o que fica ainda mais delicado por conta dos altos custos para a transmissão da herança e possíveis conflitos na partilha dos bens.</p>
+    <a class="btn" href="#tributacao">Atenção para mudanças no imposto sobre a morte
+      <svg viewBox="0 0 40 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 6h38M32 1l6 5-6 5"/></svg></a>
+  </div>
+</section>
+
+<!-- ===================== SEÇÕES MARROM (mídia + texto) ===================== -->
+<section class="warm">
+  <div class="wrap">
+    <div class="media-row">
+      <div class="media">
+        <video autoplay muted loop playsinline poster="hero-poster.jpg">
+          <source src="video-planejamento.mp4" type="video/mp4"></video>
+      </div>
+      <div>
+        <h2>Planejamento Patrimonial e Sucessório.</h2>
+        <p>Através da análise de especialistas, iremos avaliar a alocação do seu patrimônio buscando aplicar medidas que irão evitar as consequências negativas de um inventário.</p>
+        <a class="btn" href="#consultores">Consultores
+          <svg viewBox="0 0 40 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 6h38M32 1l6 5-6 5"/></svg></a>
+      </div>
+    </div>
+
+    <div class="media-row rev" id="tributacao">
+      <div class="media" style="aspect-ratio:512/500;background:#e9e4da">
+        <img src="leao-receita.webp" alt="Atenção à tributação sobre o inventário" style="object-fit:contain">
+      </div>
+      <div>
+        <h2>Atenção para mudanças na tributação sobre o inventário.</h2>
+        <p>Na busca por evitar o inventário, recomendamos urgência na avaliação do tema. Com o advento da reforma tributária (Emenda Constitucional nº. 132 de dezembro de 2023), a tendência é que o imposto sobre a morte (ITCMD ou ITCD) seja alterado, em muitos estados, para a sua alíquota máxima no percentual 8% sobre o valor da herança. Neste cenário, o ano de 2024 é crucial para esse assunto, visto que, a partir de 2025, os contribuintes poderão enfrentar uma alíquota dobrada na realização dos inventários e na doação de bens.</p>
+        <p style="margin-top:14px">Não bastasse isto, o inventário também tem outros elevados custos como o ganho de capital do espólio (15% a 22,5% sobre a diferença entre o valor de declaração ao IR e o valor de mercado do patrimônio), às custas judiciais/cartórios e os honorários advocatícios (10% sobre valor da herança).</p>
+        <a class="btn" href="#consultores" style="margin-top:24px">Consultores
+          <svg viewBox="0 0 40 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 6h38M32 1l6 5-6 5"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NOSSOS 3 PILARES ===================== -->
+<section class="dark-sec">
+  <div class="wrap pilares">
+    <div>
+      <h2>Nossos 3 Pilares</h2>
+      <ul>
+        <li><span class="ic"></span> Planejamento Sucessório</li>
+        <li><span class="ic"></span> Proteção do seu Patrimônio</li>
+        <li><span class="ic"></span> Planejamento tributário</li>
+      </ul>
+    </div>
+    <div class="vid">
+      <video autoplay muted loop playsinline poster="pilares.jpg">
+        <source src="video-mck.mp4" type="video/mp4"></video>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SOLUÇÕES (6 cards) ===================== -->
+<section class="dark-sec" id="solucoes">
+  <div class="wrap">
+    <div class="sol-head">
+      <h2>Como podemos evitar todo<br>o desgaste de um inventário</h2>
+      <div class="div"></div>
+    </div>
+    <div class="cards">
+      <div class="card"><div><h3>Alocação do Patrimônio</h3><p>Avaliamos a distribuição do seu patrimônio e aplicamos medidas para evitar consequências negativas em inventários futuros.</p></div></div>
+      <div class="card"><div><h3>Análise de Riscos</h3><p>Realizamos auditorias especializadas para identificar e mitigar riscos associados ao seu patrimônio, garantindo sua proteção.</p></div></div>
+      <div class="card"><div><h3>Redução de Carga Tributária</h3><p>Aplicamos estratégias que podem reduzir significativamente os tributos em operações específicas, promovendo economia fiscal.</p></div></div>
+      <div class="card"><div><h3>Constituição de Holding Patrimonial</h3><p>Utilizamos a constituição de uma holding para proteger e gerir os bens, evitando complicações futuras e garantindo eficiência sucessória.</p></div></div>
+      <div class="card"><div><h3>Gestão Patrimonial com Trust</h3><p>Implementamos trusts para garantir que o patrimônio seja gerido e transferido de forma eficaz aos beneficiários no futuro.</p></div></div>
+      <div class="card"><div><h3>Governança Corporativa</h3><p>Estruturamos a governança corporativa do patrimônio para assegurar sua aplicação correta, mesmo na ausência do titular.</p></div>
+        <a href="#simulacao" aria-label="Soluções"><svg class="ci" viewBox="0 0 40 12" fill="none" stroke="#d9b44a" stroke-width="1.4"><path d="M0 6h38M32 1l6 5-6 5"/></svg></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SIMULAÇÃO => CALCULADORA ITCMD ===================== -->
+<section class="sim" id="simulacao">
+  <div class="wrap">
+    <h2 class="sim-title">Veja uma simulação sobre os gastos de uma família no cenário de um inventário e na aplicação do projeto de Planejamento Patrimonial e Sucessório</h2>
+
+    <div class="calc-form">
+      <div class="fld">
+        <label for="cv">Valor do patrimônio em imóveis<small>Valor de mercado dos bens</small></label>
+        <input id="cv" type="text" inputmode="numeric" placeholder="R$ 4.000.000,00" autocomplete="off">
+      </div>
+      <div class="fld">
+        <label for="cuf">Estado (UF)<small>Define a alíquota aplicada</small></label>
+        <select id="cuf"></select>
+      </div>
+      <div class="fld">
+        <label for="cd">Valor declarado no IR / DIRPF<small>Opcional — base do planejamento</small></label>
+        <input id="cd" type="text" inputmode="numeric" placeholder="R$ 800.000,00 (opcional)" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="calc-result">
+      <div class="col-inv">
+        <div class="col-head">Inventário tradicional</div>
+        <div class="col-body">
+          <div class="line"><span class="k">Base de cálculo (valor de mercado)</span><span class="v" id="ib">—</span></div>
+          <div class="line"><span class="k">Alíquota ITCMD aplicada</span><span class="v" id="ia">—</span></div>
+          <div class="dv"></div>
+          <div class="line tot"><span class="k">ITCMD estimado</span><span class="v" id="ii">—</span></div>
+        </div>
+      </div>
+      <div class="col-plan">
+        <div class="col-head">Planejamento Patrimonial</div>
+        <div class="col-body">
+          <div class="line"><span class="k">Base de cálculo (valor declarado)</span><span class="v" id="pb">—</span></div>
+          <div class="line"><span class="k">Alíquota ITCMD aplicada</span><span class="v" id="pa">—</span></div>
+          <div class="dv"></div>
+          <div class="line tot"><span class="k">ITCMD estimado</span><span class="v" id="pi">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eco">
+      <span class="lbl">Economia estimada de ITCMD</span>
+      <div style="text-align:right"><div class="big" id="ev">—</div><div class="pct" id="ep"></div></div>
+    </div>
+
+    <p class="sim-disc">Os valores apresentados são estimativas e podem variar conforme o estado, a estrutura patrimonial, o valor declarado dos bens e a análise jurídica/contábil individual. Esta simulação não constitui orientação tributária definitiva.</p>
+
+    <div class="sim-cta">
+      <a class="btn" href="#contato" style="border-color:rgba(255,255,255,.8)">Simule Gratuitamente
+        <svg viewBox="0 0 40 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 6h38M32 1l6 5-6 5"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QUEM SOMOS ===================== -->
+<section class="dark-sec" id="consultores">
+  <div class="wrap quem">
+    <h2>Quem somos</h2>
+    <p>Nossos consultores têm ampla experiência na aplicação de exitosos projetos de Planejamento Patrimonial e Sucessório, os quais contam com uma retaguarda jurídica exclusiva e especializada. Somos os responsáveis pela idealização e o acompanhamento de propostas envolvendo o patrimônio dos principais empresários do sul de Minas Gerais e leste de São Paulo, com mais de 15 (quinze) anos de sucesso na execução de operações que já ultrapassam R$ 20.000.000,00 em resultados de elisão fiscal.</p>
+  </div>
+</section>
+
+<!-- ===================== DIRETORES ===================== -->
+<section class="dark-sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="dirs">
+      <div class="dir"><img src="dr-robson.jpeg" alt="Robson Eduardo B. Krepp"><h3>Robson Eduardo B. Krepp</h3><p>Diretor Comercial</p></div>
+      <div class="dir"><img src="dr-rafaelli.jpeg" alt="Rafaelli Moreira Cesar"><h3>Rafaelli Moreira Cesar</h3><p>Diretor Administrativo</p></div>
+      <div class="dir"><img src="dr-paulo.jpeg" alt="Paulo Henrique Loyola"><h3>Paulo Henrique Loyola</h3><p>Estrategista-chefe</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PARCEIROS ===================== -->
+<section class="dark-sec" style="padding-top:0">
+  <div class="wrap parc">
+    <h3>Parceiros</h3>
+    <img src="logo-mck.jpeg" alt="MCK Advogados">
+  </div>
+</section>
+
+<!-- ===================== FORMULÁRIO ===================== -->
+<section class="formsec" id="contato">
+  <div class="wrap formgrid">
+    <div>
+      <h2>Faça uma simulação gratuita com os nossos consultores.</h2>
+      <p>Basta preencher o formulário, que entraremos em contato com você:</p>
+    </div>
+    <!-- PREPARADO p/ CRM (pipeline DNA VPS) — integração na próxima etapa.
+         Endpoint futuro estilo MCK: POST https://crm.<...>/api/leads/publico  -->
+    <form class="lead-form" id="leadForm" data-pipeline="DNA VPS">
+      <div class="ff"><label for="n">Nome</label><input id="n" name="nome" required></div>
+      <div class="ff"><label for="e">Email</label><input id="e" name="email" type="email" required></div>
+      <div class="ff"><label for="t">Telefone</label><input id="t" name="telefone" inputmode="tel" required></div>
+      <button type="submit">Enviar</button>
+      <div class="ok" id="formOk">Recebemos seus dados. Em breve entraremos em contato! ✅</div>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="wrap">
+    <div class="ft-logo">DNA</div>
+    <div class="ft-mail">Email de contato: <a href="mailto:contato@ppsdna.com.br">contato@ppsdna.com.br</a></div>
+    <div class="ft-social">
+      <a href="https://api.whatsapp.com/send?phone=553599667294&text=Ol%C3%A1!%20Preciso%20de%20um%20especialista%20da%20DNA." target="_blank" rel="noopener" aria-label="WhatsApp"><img src="icon-whatsapp.png" alt="WhatsApp"></a>
+      <a href="https://www.instagram.com/dna.pps/" target="_blank" rel="noopener" aria-label="Instagram"><img src="icon-instagram.png" alt="Instagram"></a>
+      <a href="https://www.facebook.com/profile.php?id=61563882433995" target="_blank" rel="noopener" aria-label="Facebook"><img src="icon-facebook.png" alt="Facebook"></a>
+    </div>
+    <div class="ft-addr">Av. Vicente Simões, 955, sala 201 - Nova Pouso Alegre, Pouso Alegre - MG, 37553-465.</div>
+    <div class="ft-bottom">
+      <span>©2024 - DNA - By Ever Growth</span>
+      <span class="links"><a href="#">Política de Privacidade</a><a href="#">Acessibilidade</a></span>
+    </div>
+  </div>
+</footer>
+
+<a class="wa" href="https://api.whatsapp.com/send/?phone=553599667294&text=Ol%C3%A1%21+Preciso+de+um+especialista+da+DNA.&type=phone_number&app_absent=0" target="_blank" rel="noopener" aria-label="Fale no WhatsApp">
+  <svg viewBox="0 0 32 32"><path d="M16 .4C7.4.4.4 7.4.4 16c0 2.8.7 5.4 2 7.8L.3 31.7l8.1-2.1c2.3 1.2 4.9 1.9 7.6 1.9 8.6 0 15.6-7 15.6-15.6S24.6.4 16 .4zm0 28.4c-2.5 0-4.8-.7-6.8-1.8l-.5-.3-4.8 1.3 1.3-4.7-.3-.5c-1.3-2-2-4.4-2-6.9C2.6 8.6 8.6 2.6 16 2.6S29.4 8.6 29.4 16 23.4 28.8 16 28.8zm7.4-9.7c-.4-.2-2.4-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.4-2.2-2.8-.2-.4 0-.6.2-.8.2-.2.4-.4.5-.7.2-.2.2-.4.4-.6.1-.2.1-.5 0-.7-.1-.2-.9-2.2-1.3-3-.3-.7-.6-.6-.9-.6h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1 0 1.8 1.3 3.6 1.5 3.8.2.2 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.4-1 2.7-1.9.3-.9.3-1.7.2-1.9-.1-.2-.3-.3-.7-.5z"/></svg>
+</a>
+
+<script>
+/* ===================== CALCULADORA ITCMD =====================
+   >>> EDITAR ALÍQUOTAS: objeto ALIQUOTAS_ITCMD. "prog:true" = estado progressivo
+   (valor é alíquota representativa única). PERCENTUAL_BASE_PADRAO = base do
+   planejamento quando o DIRPF não é informado. */
+const ALIQUOTAS_ITCMD = {
+  AC:{nome:"Acre",aliquota:4,prog:true}, AL:{nome:"Alagoas",aliquota:4,prog:false},
+  AP:{nome:"Amapá",aliquota:4,prog:false}, AM:{nome:"Amazonas",aliquota:2,prog:false},
+  BA:{nome:"Bahia",aliquota:8,prog:true}, CE:{nome:"Ceará",aliquota:6,prog:true},
+  DF:{nome:"Distrito Federal",aliquota:6,prog:true}, ES:{nome:"Espírito Santo",aliquota:4,prog:false},
+  GO:{nome:"Goiás",aliquota:4,prog:true}, MA:{nome:"Maranhão",aliquota:4,prog:false},
+  MT:{nome:"Mato Grosso",aliquota:4,prog:true}, MS:{nome:"Mato Grosso do Sul",aliquota:6,prog:false},
+  MG:{nome:"Minas Gerais",aliquota:5,prog:false}, PA:{nome:"Pará",aliquota:4,prog:false},
+  PB:{nome:"Paraíba",aliquota:8,prog:true}, PR:{nome:"Paraná",aliquota:4,prog:false},
+  PE:{nome:"Pernambuco",aliquota:5,prog:false}, PI:{nome:"Piauí",aliquota:4,prog:false},
+  RJ:{nome:"Rio de Janeiro",aliquota:8,prog:true}, RN:{nome:"Rio Grande do Norte",aliquota:4,prog:false},
+  RS:{nome:"Rio Grande do Sul",aliquota:6,prog:true}, RO:{nome:"Rondônia",aliquota:4,prog:true},
+  RR:{nome:"Roraima",aliquota:4,prog:false}, SC:{nome:"Santa Catarina",aliquota:8,prog:true},
+  SP:{nome:"São Paulo",aliquota:4,prog:false}, SE:{nome:"Sergipe",aliquota:4,prog:false},
+  TO:{nome:"Tocantins",aliquota:4,prog:true}
+};
+const PERCENTUAL_BASE_PADRAO = 0.20;
+const UF_PADRAO = "MG";
+const fmtBRL = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const fmtPct = v => (Number.isInteger(v)? v : v.toFixed(1).replace(".",",")) + "%";
+const soDig = s => (s||"").replace(/\D/g,"");
+const num = s => { const d=soDig(s); return d?parseInt(d,10)/100:0; };
+function mask(el){el.addEventListener("input",()=>{const n=num(el.value);el.value=n>0?fmtBRL(n):"";calc();});}
+const selUF=document.getElementById("cuf");
+Object.keys(ALIQUOTAS_ITCMD).sort((a,b)=>ALIQUOTAS_ITCMD[a].nome.localeCompare(ALIQUOTAS_ITCMD[b].nome,"pt-BR")).forEach(uf=>{
+  const o=document.createElement("option");o.value=uf;o.textContent=`${ALIQUOTAS_ITCMD[uf].nome} (${uf}) — ${fmtPct(ALIQUOTAS_ITCMD[uf].aliquota)}`;selUF.appendChild(o);});
+selUF.value=UF_PADRAO;
+const cv=document.getElementById("cv"),cd=document.getElementById("cd");
+mask(cv);mask(cd);selUF.addEventListener("change",calc);
+function calc(){
+  const merc=num(cv.value),dirpf=num(cd.value),uf=selUF.value,aPct=ALIQUOTAS_ITCMD[uf].aliquota,a=aPct/100;
+  const set=(id,t)=>document.getElementById(id).textContent=t;
+  if(merc<=0){["ib","ia","ii","pb","pa","pi","ev"].forEach(id=>set(id,"—"));set("ep","");return;}
+  const base=dirpf>0?dirpf:merc*PERCENTUAL_BASE_PADRAO,ii=merc*a,pi=base*a,eco=Math.max(ii-pi,0),ep=ii>0?eco/ii*100:0;
+  set("ib",fmtBRL(merc));set("ia",fmtPct(aPct));set("ii",fmtBRL(ii));
+  set("pb",fmtBRL(base)+(dirpf>0?"":" (estimado)"));set("pa",fmtPct(aPct));set("pi",fmtBRL(pi));
+  set("ev",fmtBRL(eco));set("ep",ep>0?`redução de ${fmtPct(Math.round(ep))} no ITCMD`:"");
+}
+cv.value=fmtBRL(4000000);cd.value=fmtBRL(800000);calc();
+
+/* ===================== FORM (stub p/ CRM — etapa futura) ===================== */
+document.getElementById("leadForm").addEventListener("submit",function(ev){
+  ev.preventDefault();
+  // TODO etapa 2: POST p/ CRM (pipeline "DNA VPS"), modelo MCK /api/leads/publico
+  this.querySelectorAll("input,button").forEach(el=>el.style.display="none");
+  document.getElementById("formOk").style.display="block";
+});
+</script>
+</body>
+</html>
