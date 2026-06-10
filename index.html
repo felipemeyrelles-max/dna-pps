@@ -58,9 +58,9 @@ header{position:fixed;top:0;left:0;width:100%;z-index:50;background:rgba(27,26,2
 .hero video,.hero .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
 .hero::after{content:"";position:absolute;inset:0;z-index:1;
   background:linear-gradient(180deg,rgba(15,14,12,.55) 0%,rgba(15,14,12,.25) 45%,rgba(15,14,12,.85) 100%)}
-.hero .wrap{position:relative;z-index:2;padding-bottom:clamp(60px,10vh,120px);width:100%}
-.hero h1{font-size:clamp(2rem,4.6vw,3rem);max-width:14ch;margin-bottom:22px}
-.hero p{font-size:clamp(1rem,1.5vw,1.18rem);max-width:60ch;color:rgba(255,255,255,.9);margin-bottom:30px;line-height:1.6}
+.hero .wrap{position:relative;z-index:2;padding-bottom:clamp(70px,11vh,130px);width:100%;display:flex;flex-direction:column;align-items:center;text-align:center}
+.hero h1{font-size:clamp(2.1rem,4.6vw,3.6rem);max-width:none;margin-bottom:24px;line-height:1.18}
+.hero p{font-size:clamp(1rem,1.5vw,1.2rem);max-width:64ch;color:rgba(255,255,255,.9);margin-bottom:32px;line-height:1.6}
 
 /* ---------- Bloco texto+mídia (seções marrom) ---------- */
 .warm{background:linear-gradient(180deg,#17110b 0%,#3d2a1c 22%,#7d5641 45%,#9b705d 58%,#5f4030 80%,#221710 100%)}
@@ -86,10 +86,12 @@ header{position:fixed;top:0;left:0;width:100%;z-index:50;background:rgba(27,26,2
 .sol-head h2{font-size:clamp(1.8rem,3.4vw,2.6rem)}
 .sol-head .div{width:46px;height:2px;background:var(--ouro);margin:20px auto 0}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden}
-.card{background:var(--darker);padding:34px 30px;display:flex;justify-content:space-between;gap:20px;align-items:flex-start;min-height:150px}
-.card h3{font-size:1.25rem;margin-bottom:12px;color:#fff}
-.card p{font-size:.95rem;line-height:1.6;color:rgba(255,255,255,.72)}
-.card .ci{width:42px;height:42px;flex:none;opacity:.85;stroke:var(--ouro)}
+.card{background:var(--darker);padding:40px 38px;display:flex;justify-content:space-between;gap:26px;align-items:center;min-height:190px}
+.card .ctx{flex:1}
+.card h3{font-style:italic;font-weight:400;font-size:clamp(1.3rem,2vw,1.7rem);margin-bottom:14px;color:#fff}
+.card p{font-size:.95rem;line-height:1.6;color:rgba(255,255,255,.72);max-width:42ch}
+.card .cic{width:76px;height:76px;flex:none;color:rgba(255,255,255,.8);fill:currentColor}
+.card .cic.stroke{fill:none;stroke:currentColor;stroke-width:3.4}
 
 /* ---------- Simulação / Calculadora (periwinkle) ---------- */
 #solucoes{background:#0e1228}
@@ -175,6 +177,12 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 .wa{position:fixed;right:22px;bottom:22px;z-index:60;width:58px;height:58px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:.2s}
 .wa:hover{transform:scale(1.06)}
 .wa svg{width:32px;height:32px;fill:#fff}
+
+/* ---------- Animações de reveal no scroll (estilo Wix) ---------- */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .85s cubic-bezier(.2,.6,.2,1),transform .85s cubic-bezier(.2,.6,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.hero video{transition:transform .1s linear}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1!important;transform:none!important;transition:none}}
 
 /* ---------- Responsivo ---------- */
 @media (max-width:860px){
@@ -280,13 +288,30 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
       <div class="div"></div>
     </div>
     <div class="cards">
-      <div class="card"><div><h3>Alocação do Patrimônio</h3><p>Avaliamos a distribuição do seu patrimônio e aplicamos medidas para evitar consequências negativas em inventários futuros.</p></div></div>
-      <div class="card"><div><h3>Análise de Riscos</h3><p>Realizamos auditorias especializadas para identificar e mitigar riscos associados ao seu patrimônio, garantindo sua proteção.</p></div></div>
-      <div class="card"><div><h3>Redução de Carga Tributária</h3><p>Aplicamos estratégias que podem reduzir significativamente os tributos em operações específicas, promovendo economia fiscal.</p></div></div>
-      <div class="card"><div><h3>Constituição de Holding Patrimonial</h3><p>Utilizamos a constituição de uma holding para proteger e gerir os bens, evitando complicações futuras e garantindo eficiência sucessória.</p></div></div>
-      <div class="card"><div><h3>Gestão Patrimonial com Trust</h3><p>Implementamos trusts para garantir que o patrimônio seja gerido e transferido de forma eficaz aos beneficiários no futuro.</p></div></div>
-      <div class="card"><div><h3>Governança Corporativa</h3><p>Estruturamos a governança corporativa do patrimônio para assegurar sua aplicação correta, mesmo na ausência do titular.</p></div>
-        <a href="#simulacao" aria-label="Soluções"><svg class="ci" viewBox="0 0 40 12" fill="none" stroke="#d9b44a" stroke-width="1.4"><path d="M0 6h38M32 1l6 5-6 5"/></svg></a></div>
+      <div class="card">
+        <div class="ctx"><h3>Alocação do Patrimônio</h3><p>Avaliamos a distribuição do seu patrimônio e aplicamos medidas para evitar consequências negativas em inventários futuros.</p></div>
+        <svg class="cic" viewBox="10 11 180 177.397" aria-hidden="true"><g><path d="m187.708 106.703-114.91 80.668a5.66 5.66 0 0 1-6.433.047L10 149.072l2.122-3.119 56.365 38.346a1.89 1.89 0 0 0 2.145-.016l114.908-80.667z"/><path d="M189.252 88.973 74.343 169.641a5.66 5.66 0 0 1-6.434.047l-56.365-38.346 2.122-3.119 56.365 38.346a1.89 1.89 0 0 0 2.145-.015l114.908-80.668z"/><path d="M189.252 72.02 74.343 152.689a5.66 5.66 0 0 1-6.434.047L11.544 114.39l2.122-3.119 56.365 38.346a1.89 1.89 0 0 0 2.145-.016l114.908-80.668z"/><path d="M132.484 15.096a1.89 1.89 0 0 0-2.155.028L20.495 93.736a1.886 1.886 0 0 0 .053 3.105l51.867 34.492c.646.429 1.488.42 2.124-.023l110.881-77.3a1.886 1.886 0 0 0-.021-3.11zm-4.35-3.039a5.66 5.66 0 0 1 6.464-.085l52.915 35.803c3.288 2.225 3.322 7.057.065 9.328l-110.882 77.3a5.66 5.66 0 0 1-6.37.07L18.46 99.981c-3.298-2.193-3.38-7.008-.16-9.313z"/></g></svg>
+      </div>
+      <div class="card">
+        <div class="ctx"><h3>Análise de Riscos</h3><p>Realizamos auditorias especializadas para identificar e mitigar riscos associados ao seu patrimônio, garantindo sua proteção.</p></div>
+        <svg class="cic" viewBox="5 25 190 149.707" aria-hidden="true"><g><path d="M5 169.941V25h3.178v144.941c0 .877.711 1.588 1.589 1.588H195v3.178H9.767A4.766 4.766 0 0 1 5 169.941"/><path d="M70.526 44.412v127.646h-3.178V44.412zm94.326 0v127.646h-3.178V44.412zM37.429 96.869v75.189h-3.178v-75.19zm104.255 10.491v64.698h-3.178V107.36zm-29.787 29.726v34.972h-3.178v-34.972z"/></g></svg>
+      </div>
+      <div class="card">
+        <div class="ctx"><h3>Redução de Carga Tributária</h3><p>Aplicamos estratégias que podem reduzir significativamente os tributos em operações específicas, promovendo economia fiscal.</p></div>
+        <svg class="cic" viewBox="10 52 180.001 95.116" aria-hidden="true"><g><path d="M187.307 144.296a96.8 96.8 0 0 0-6.608-32.5c-4.389-11.198-10.823-21.372-18.935-29.943-8.111-8.57-17.74-15.369-28.337-20.007S111.471 54.82 100 54.82s-22.83 2.388-33.427 7.026-20.226 11.437-28.337 20.007S23.69 100.598 19.3 111.796a96.8 96.8 0 0 0-6.608 32.5zm2.693.94c.019 1.038-.779 1.88-1.762 1.88H11.762c-.983 0-1.781-.842-1.762-1.88.222-11.85 2.538-23.558 6.835-34.519 4.524-11.54 11.154-22.026 19.513-30.858S54.631 64.02 65.552 59.24 88.179 52 100 52s23.527 2.46 34.448 7.24 20.845 11.786 29.204 20.619 14.989 19.318 19.513 30.858c4.297 10.961 6.613 22.669 6.835 34.519"/><path d="m126.97 58.058-23.522 83.508L172.35 94.87l1.736 2.562-73.2 49.608-78.412-44.087 1.516-2.698 73.578 41.369-34.147-78.94 2.84-1.23 34.241 79.157 23.489-83.392z"/></g></svg>
+      </div>
+      <div class="card">
+        <div class="ctx"><h3>Constituição de Holding Patrimonial</h3><p>Utilizamos a constituição de uma holding para proteger e gerir os bens, evitando complicações futuras e garantindo eficiência sucessória.</p></div>
+        <svg class="cic" viewBox="15.564 67.196 174.066 79.41" aria-hidden="true"><g><path d="m118.723 69.174-67.547 70.529c-1.547 1.616-4.114 1.62-5.75.007l-29.862-29.411 1.862-1.982 29.862 29.411c.545.537 1.4.536 1.917-.002l67.546-70.53z"/><path d="m189.63 74.863-67.547 70.529c-1.548 1.616-4.114 1.619-5.751.007L86.47 115.987l1.863-1.982 29.861 29.411c.546.538 1.401.537 1.917-.002l67.547-70.529z"/></g></svg>
+      </div>
+      <div class="card">
+        <div class="ctx"><h3>Gestão Patrimonial com Trust</h3><p>Implementamos trusts para garantir que o patrimônio seja gerido e transferido de forma eficaz aos beneficiários no futuro.</p></div>
+        <svg class="cic stroke" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="33"/><circle cx="100" cy="100" r="51.5"/><circle cx="100" cy="100" r="69.7"/><circle cx="100" cy="100" r="88"/></svg>
+      </div>
+      <div class="card">
+        <div class="ctx"><h3>Governança Corporativa</h3><p>Estruturamos a governança corporativa do patrimônio para assegurar sua aplicação correta, mesmo na ausência do titular.</p></div>
+        <a href="#simulacao" aria-label="Soluções"><svg class="cic" viewBox="10 60.599 182.825 77.826" aria-hidden="true"><path d="m153.996 138.425 38.829-38.266-38.805-39.56-2.855 2.802 34.072 34.734H10v4.001h175.121l-33.933 33.44z"/></svg></a>
+      </div>
     </div>
   </div>
 </section>
@@ -466,6 +491,31 @@ document.getElementById("leadForm").addEventListener("submit",function(ev){
   this.querySelectorAll("input,button").forEach(el=>el.style.display="none");
   document.getElementById("formOk").style.display="block";
 });
+
+/* ===================== ANIMAÇÕES DE SCROLL (reveal + parallax) ===================== */
+(function(){
+  const sel = "h1,.hero p,.hero .btn,.media-row h2,.media-row p,.media-row .btn,.media-row .media,.pilares h2,.pilares li,.pilares .vid,.sol-head,.card,.sim-title,.calc-form,.calc-result,.eco,.sim-cta,.quem h2,.quem p,.dir,.parc h3,.parc img,.formgrid h2,.formgrid p,.lead-form,.ft-logo";
+  const els = document.querySelectorAll(sel);
+  els.forEach(el=>el.classList.add("reveal"));
+  // stagger por grupo
+  [".cards .card",".dirs .dir",".pilares li"].forEach(g=>{
+    document.querySelectorAll(g).forEach((el,i)=>el.style.transitionDelay=(i*0.09)+"s");
+  });
+  const io = new IntersectionObserver((ents)=>{
+    ents.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+  },{threshold:0.12, rootMargin:"0px 0px -7% 0px"});
+  els.forEach(el=>io.observe(el));
+  // parallax sutil no vídeo do hero
+  const hv = document.querySelector(".hero video");
+  if(hv){
+    let raf=false;
+    addEventListener("scroll",()=>{
+      if(raf) return; raf=true;
+      requestAnimationFrame(()=>{ const y=Math.min(scrollY,900); hv.style.transform="scale(1.06) translateY("+(y*0.06)+"px)"; raf=false; });
+    },{passive:true});
+    hv.style.transform="scale(1.06)";
+  }
+})();
 </script>
 </body>
 </html>
