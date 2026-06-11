@@ -1,7 +1,40 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5CNV4XH5');</script>
+<!-- End Google Tag Manager -->
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1922595521595366');
+fbq('track','PageView');
+function sendCapi(eventName,userData){
+  var eid='ev_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+  fbq('track',eventName,{},{eventID:eid});
+  fetch('/api/capi',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({event_name:eventName,event_id:eid,
+      event_source_url:window.location.href,user_data:userData||{}})
+  }).catch(function(){});
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('a[href*="553599"],a[href*="wa.me"],.whatsapp-float').forEach(function(el){
+    el.addEventListener('click',function(){sendCapi('Contact',{});});
+  });
+});
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1922595521595366&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>HOME | DNA PPS — Planejamento Patrimonial e Sucessório</title>
 <meta name="description" content="O Inventário é um problema e a DNA PPS pode evitá-lo. Planejamento Patrimonial e Sucessório para proteger seu patrimônio e reduzir custos." />
@@ -33,11 +66,13 @@ h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.15;letter-spac
 /* ---------- Botão pílula contornado ---------- */
 .btn{
   display:inline-flex;align-items:center;gap:28px;justify-content:space-between;
-  border:1px solid rgba(255,255,255,.55);border-radius:50px;
-  padding:14px 26px;font-family:var(--text);font-size:.92rem;color:#fff;
-  background:transparent;cursor:pointer;transition:.25s;min-width:230px;
+  border:1.6px solid rgba(255,255,255,.92);border-radius:50px;
+  padding:15px 30px;font-family:var(--text);font-size:.94rem;color:#fff;
+  background:rgba(255,255,255,.08);cursor:pointer;transition:.22s;min-width:230px;
 }
-.btn:hover{background:#fff;color:var(--dark);border-color:#fff}
+.btn:hover{background:#fff;color:var(--dark);border-color:#fff;transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.28)}
+.btn.cta{background:#fff;color:var(--dark);border-color:#fff;font-weight:600}
+.btn.cta:hover{background:var(--ouro);border-color:var(--ouro);color:#1a1530}
 .btn svg{width:34px;height:12px;flex:none}
 .btn.dark{border-color:rgba(0,0,0,.5);color:#1b1a16}
 .btn.dark:hover{background:#1b1a16;color:#fff;border-color:#1b1a16}
@@ -97,7 +132,7 @@ header{position:fixed;top:0;left:0;width:100%;z-index:50;background:rgba(27,26,2
 #solucoes{background:#0e1228}
 .sim{background:linear-gradient(180deg,var(--peri-1) 0%,var(--peri-2) 50%,var(--peri-3) 100%);padding:clamp(56px,8vw,104px) 0}
 .sim>.wrap{max-width:1080px}
-.sim .sim-title{text-align:center;max-width:26ch;margin:0 auto clamp(30px,5vw,46px);font-size:clamp(2rem,4vw,3.15rem)}
+.sim .sim-title{text-align:center;max-width:none;margin:0 auto clamp(30px,5vw,46px);font-size:clamp(2.05rem,4.3vw,3.35rem);letter-spacing:.004em}
 .calc-form{display:grid;grid-template-columns:1.2fr 1fr 1.2fr;gap:16px;max-width:900px;margin:0 auto clamp(22px,3.5vw,32px)}
 .fld{display:flex;flex-direction:column;gap:8px;text-align:left}
 .fld label{font-size:.82rem;font-weight:500;color:rgba(255,255,255,.92)}
@@ -177,6 +212,50 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 .wa{position:fixed;right:22px;bottom:22px;z-index:60;width:58px;height:58px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:.2s}
 .wa:hover{transform:scale(1.06)}
 .wa svg{width:32px;height:32px;fill:#fff}
+/* ── POPUP QUALIFICAÇÃO ── */
+#qpopup{position:fixed;inset:0;background:rgba(7,7,9,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+#qpopup.open{display:flex}
+.qcard{background:linear-gradient(160deg,#1e1c11 0%,#13110a 55%,#0d0b06 100%);border:1px solid rgba(217,180,74,.22);border-radius:20px;width:100%;max-width:490px;padding:0;position:relative;max-height:92vh;overflow-y:auto;box-shadow:0 0 0 1px rgba(217,180,74,.07) inset,0 1px 0 rgba(217,180,74,.18) inset,0 32px 80px rgba(0,0,0,.75),0 8px 32px rgba(0,0,0,.5)}
+.qcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 0%,rgba(217,180,74,.6) 25%,#d9b44a 50%,rgba(217,180,74,.6) 75%,transparent 100%);z-index:1;pointer-events:none}
+@media(max-width:480px){.qcard{border-radius:16px}}
+.qcard-header{padding:28px 28px 0;display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.qcard-icon{width:38px;height:38px;background:rgba(217,180,74,.1);border:1px solid rgba(217,180,74,.28);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qcard-icon svg{width:19px;height:19px;fill:none;stroke:#d9b44a;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.qcard h3{font-family:'Wix Madefor Display',sans-serif;font-size:19px;font-weight:700;color:#fff;margin:0 0 3px;letter-spacing:-.01em;line-height:1.25}
+.qcard-subtitle{color:rgba(255,255,255,.42);font-size:12.5px;margin:0;line-height:1.5;font-family:'Wix Madefor Display',sans-serif}
+#qform-wrap{padding:16px 28px 28px}
+.qfield{margin-bottom:16px}
+.qfield>label{display:block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(217,180,74,.6);margin-bottom:7px;font-family:'Wix Madefor Display',sans-serif}
+.qfield input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;font-size:15px;color:#fff;font-family:'Wix Madefor Display',sans-serif;outline:none;transition:border-color .2s,background .2s,box-shadow .2s}
+.qfield input:focus{border-color:rgba(217,180,74,.5);background:rgba(255,255,255,.07);box-shadow:0 0 0 3px rgba(217,180,74,.08)}
+.qfield input::placeholder{color:rgba(255,255,255,.22)}
+.qfield input.err{border-color:rgba(220,60,60,.5)!important}
+.qerr{display:none;font-size:11.5px;color:#e06060;margin-top:5px;font-family:'Wix Madefor Display',sans-serif}
+.qpatrimoniogroup{margin-bottom:20px}
+.qflabel{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(217,180,74,.6);margin-bottom:10px;font-family:'Wix Madefor Display',sans-serif}
+.qropts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qropts .qrlabel:last-child:nth-child(odd){grid-column:1/-1}
+.qrlabel{display:flex;align-items:center;gap:9px;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:10px;cursor:pointer;font-size:15px;color:rgba(255,255,255,.65);transition:border-color .2s,background .2s,color .2s;font-family:'Wix Madefor Display',sans-serif;user-select:none;position:relative}
+.qrlabel::before{content:'';width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0;transition:border-color .2s,background .2s,box-shadow .2s;background:transparent}
+.qrlabel:hover{border-color:rgba(217,180,74,.35);background:rgba(217,180,74,.06);color:rgba(255,255,255,.85)}
+.qrlabel:hover::before{border-color:rgba(217,180,74,.5)}
+.qrlabel:has(input:checked){border-color:rgba(217,180,74,.6);background:rgba(217,180,74,.1);color:#d9b44a;font-weight:600}
+.qrlabel:has(input:checked)::before{border-color:#d9b44a;background:#d9b44a;box-shadow:inset 0 0 0 4px #13110a}
+.qrlabel input[type=radio]{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.qclose{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s;z-index:2;padding:0;line-height:1;font-family:inherit}
+.qclose:hover{background:rgba(255,255,255,.13);color:#fff}
+.qsubmit{width:100%;background:linear-gradient(135deg,#d9b44a 0%,#c19535 100%);color:#0d0b06;border:none;border-radius:12px;font-size:15px;font-weight:700;padding:15px;cursor:pointer;margin-top:4px;transition:opacity .2s,transform .15s,box-shadow .2s;font-family:'Wix Madefor Display',sans-serif;letter-spacing:.02em;box-shadow:0 4px 24px rgba(217,180,74,.3)}
+.qsubmit:hover{opacity:.92;transform:translateY(-1px);box-shadow:0 6px 32px rgba(217,180,74,.4)}
+.qsubmit:active{transform:translateY(0) scale(.99)}
+.qsubmit:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.qtrust{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:12px;font-size:11px;color:rgba(255,255,255,.25);font-family:'Wix Madefor Display',sans-serif}
+.qthanks{display:none;text-align:center;padding:44px 28px 40px}
+.qthanks .qti{font-size:40px;margin-bottom:14px}
+.qthanks h4{font-size:21px;font-weight:700;color:#fff;margin:0 0 8px;font-family:'Wix Madefor Display',sans-serif}
+.qthanks p{color:rgba(255,255,255,.5);font-size:14.5px;margin:0 0 22px;line-height:1.6}
+.qthanks .qebookbtn{display:inline-block;background:linear-gradient(135deg,#d9b44a,#c19535);color:#0d0b06;border-radius:10px;padding:13px 28px;font-weight:700;font-size:15px;text-decoration:none;font-family:'Wix Madefor Display',sans-serif;margin-bottom:14px;box-shadow:0 4px 20px rgba(217,180,74,.3)}
+.qthanks .qebookbtn:hover{opacity:.9}
+.qthanks .qfechar{display:block;font-size:13px;color:rgba(255,255,255,.28);cursor:pointer;text-decoration:none;margin-top:6px}
 
 /* ---------- Animações de reveal no scroll (estilo Wix) ---------- */
 .reveal{opacity:0;transform:translateY(34px);transition:opacity .85s cubic-bezier(.2,.6,.2,1),transform .85s cubic-bezier(.2,.6,.2,1)}
@@ -200,6 +279,10 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CNV4XH5"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- ===================== HEADER ===================== -->
 <header>
@@ -211,7 +294,7 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
       <a href="#contato">CONTATOS</a>
     </nav>
     <div class="brand">
-      <img src="logo-dna.jpeg" alt="DNA PPS" />
+      <img src="assets/logo-dna.jpeg" alt="DNA PPS" />
       <div class="bt">Planejamento Patrimonial<br>e Sucessório</div>
     </div>
     <button class="burger" aria-label="Menu" onclick="document.querySelector('.nav').style.display=(getComputedStyle(document.querySelector('.nav')).display==='none'?'flex':'none')">☰</button>
@@ -220,8 +303,8 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="topo">
-  <video autoplay muted loop playsinline poster="hero-poster.jpg">
-    <source src="hero.mp4" type="video/mp4">
+  <video autoplay muted loop playsinline poster="assets/hero-poster.jpg">
+    <source src="assets/hero.mp4" type="video/mp4">
   </video>
   <div class="wrap">
     <h1>O Inventário é um problema e a DNA PPS pode evitá-lo</h1>
@@ -236,8 +319,8 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
   <div class="wrap">
     <div class="media-row">
       <div class="media">
-        <video autoplay muted loop playsinline poster="hero-poster.jpg">
-          <source src="video-planejamento.mp4" type="video/mp4"></video>
+        <video autoplay muted loop playsinline poster="assets/hero-poster.jpg">
+          <source src="assets/video-planejamento.mp4" type="video/mp4"></video>
       </div>
       <div>
         <h2>Planejamento Patrimonial e Sucessório.</h2>
@@ -249,7 +332,7 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 
     <div class="media-row rev" id="tributacao">
       <div class="media" style="aspect-ratio:512/500;background:#e9e4da">
-        <img src="leao-receita.webp" alt="Atenção à tributação sobre o inventário" style="object-fit:contain">
+        <img src="assets/leao-receita.webp" alt="Atenção à tributação sobre o inventário" style="object-fit:contain">
       </div>
       <div>
         <h2>Atenção para mudanças na tributação sobre o inventário.</h2>
@@ -274,8 +357,8 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
       </ul>
     </div>
     <div class="vid">
-      <video autoplay muted loop playsinline poster="pilares.jpg">
-        <source src="video-mck.mp4" type="video/mp4"></video>
+      <video autoplay muted loop playsinline poster="assets/pilares.jpg">
+        <source src="assets/video-mck.mp4" type="video/mp4"></video>
     </div>
   </div>
 </section>
@@ -320,6 +403,7 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 <section class="sim" id="simulacao">
   <div class="wrap">
     <h2 class="sim-title">Veja uma simulação sobre os gastos de uma família no cenário de um inventário e na aplicação do projeto de Planejamento Patrimonial e Sucessório</h2>
+    <p style="text-align:center;color:rgba(255,255,255,.72);font-size:1.05rem;margin:-18px auto 32px;max-width:660px;line-height:1.65">Preencha os campos abaixo e descubra quanto você pode economizar com um planejamento bem feito — a simulação é gratuita e imediata.</p>
 
     <div class="calc-form">
       <div class="fld">
@@ -362,10 +446,18 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
       <div style="text-align:right"><div class="big" id="ev">—</div><div class="pct" id="ep"></div></div>
     </div>
 
+    <div id="sim-hint-ebook" style="display:none;max-width:900px;margin:18px auto 0;background:rgba(217,180,74,.1);border:1.5px solid rgba(217,180,74,.35);border-radius:14px;padding:16px 22px;display:none;align-items:center;gap:14px;flex-wrap:wrap">
+      <span style="font-size:1.3rem">📥</span>
+      <div style="flex:1;min-width:200px">
+        <span style="color:rgba(255,255,255,.85);font-size:.95rem">Patrimônio abaixo de R$500k? Temos um material gratuito feito para você: </span>
+        <a href="/ebook.html" target="_blank" style="color:var(--ouro);font-weight:600;font-size:.95rem;text-decoration:underline">5 Erros que Fazem Você Pagar o Inventário em Dobro →</a>
+      </div>
+    </div>
+
     <p class="sim-disc">Os valores apresentados são estimativas e podem variar conforme o estado, a estrutura patrimonial, o valor declarado dos bens e a análise jurídica/contábil individual. Esta simulação não constitui orientação tributária definitiva.</p>
 
     <div class="sim-cta">
-      <a class="btn" href="#contato" style="border-color:rgba(255,255,255,.8)">Simule Gratuitamente
+      <a class="btn cta" href="#" onclick="openModal();return false;">Simule Gratuitamente
         <svg viewBox="0 0 40 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M0 6h38M32 1l6 5-6 5"/></svg></a>
     </div>
   </div>
@@ -383,9 +475,9 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 <section class="dark-sec" style="padding-top:0">
   <div class="wrap">
     <div class="dirs">
-      <div class="dir"><img src="dr-robson.jpeg" alt="Robson Eduardo B. Krepp"><h3>Robson Eduardo B. Krepp</h3><p>Diretor Comercial</p></div>
-      <div class="dir"><img src="dr-rafaelli.jpeg" alt="Rafaelli Moreira Cesar"><h3>Rafaelli Moreira Cesar</h3><p>Diretor Administrativo</p></div>
-      <div class="dir"><img src="dr-paulo.jpeg" alt="Paulo Henrique Loyola"><h3>Paulo Henrique Loyola</h3><p>Estrategista-chefe</p></div>
+      <div class="dir"><img src="assets/dr-robson.jpeg" alt="Robson Eduardo B. Krepp"><h3>Robson Eduardo B. Krepp</h3><p>Diretor Comercial</p></div>
+      <div class="dir"><img src="assets/dr-rafaelli.jpeg" alt="Rafaelli Moreira Cesar"><h3>Rafaelli Moreira Cesar</h3><p>Diretor Administrativo</p></div>
+      <div class="dir"><img src="assets/dr-paulo.jpeg" alt="Paulo Henrique Loyola"><h3>Paulo Henrique Loyola</h3><p>Estrategista-chefe</p></div>
     </div>
   </div>
 </section>
@@ -394,26 +486,19 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 <section class="dark-sec" style="padding-top:0">
   <div class="wrap parc">
     <h3>Parceiros</h3>
-    <img src="logo-mck.jpeg" alt="MCK Advogados">
+    <img src="assets/logo-mck.jpeg" alt="MCK Advogados">
   </div>
 </section>
 
 <!-- ===================== FORMULÁRIO ===================== -->
 <section class="formsec" id="contato">
-  <div class="wrap formgrid">
-    <div>
-      <h2>Faça uma simulação gratuita com os nossos consultores.</h2>
-      <p>Basta preencher o formulário, que entraremos em contato com você:</p>
-    </div>
-    <!-- PREPARADO p/ CRM (pipeline DNA VPS) — integração na próxima etapa.
-         Endpoint futuro estilo MCK: POST https://crm.<...>/api/leads/publico  -->
-    <form class="lead-form" id="leadForm" data-pipeline="DNA VPS">
-      <div class="ff"><label for="n">Nome</label><input id="n" name="nome" required></div>
-      <div class="ff"><label for="e">Email</label><input id="e" name="email" type="email" required></div>
-      <div class="ff"><label for="t">Telefone</label><input id="t" name="telefone" inputmode="tel" required></div>
-      <button type="submit">Enviar</button>
-      <div class="ok" id="formOk">Recebemos seus dados. Em breve entraremos em contato! ✅</div>
-    </form>
+  <div class="wrap" style="text-align:center;max-width:620px">
+    <h2 style="font-size:clamp(26px,4vw,38px);margin-bottom:16px">Faça uma simulação gratuita com os nossos consultores.</h2>
+    <p style="color:#555;font-size:17px;margin-bottom:32px;line-height:1.6">Descubra quanto o seu patrimônio pode estar em risco e o quanto você pode economizar com um planejamento bem feito.</p>
+    <a href="#" class="btn" onclick="openModal();return false;" style="background:#d9b44a;color:#1b1a16;border-color:#d9b44a;font-size:17px;padding:16px 36px;display:inline-flex;gap:10px;align-items:center">
+      Quero minha simulação gratuita
+      <svg viewBox="0 0 40 12" fill="none" stroke="currentColor" stroke-width="1.4" style="width:32px"><path d="M0 6h38M32 1l6 5-6 5"/></svg>
+    </a>
   </div>
 </section>
 
@@ -423,9 +508,9 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
     <div class="ft-logo">DNA</div>
     <div class="ft-mail">Email de contato: <a href="mailto:contato@ppsdna.com.br">contato@ppsdna.com.br</a></div>
     <div class="ft-social">
-      <a href="https://api.whatsapp.com/send?phone=553599667294&text=Ol%C3%A1!%20Preciso%20de%20um%20especialista%20da%20DNA." target="_blank" rel="noopener" aria-label="WhatsApp"><img src="icon-whatsapp.png" alt="WhatsApp"></a>
-      <a href="https://www.instagram.com/dna.pps/" target="_blank" rel="noopener" aria-label="Instagram"><img src="icon-instagram.png" alt="Instagram"></a>
-      <a href="https://www.facebook.com/profile.php?id=61563882433995" target="_blank" rel="noopener" aria-label="Facebook"><img src="icon-facebook.png" alt="Facebook"></a>
+      <a href="https://api.whatsapp.com/send?phone=553599667294&text=Ol%C3%A1!%20Preciso%20de%20um%20especialista%20da%20DNA." target="_blank" rel="noopener" aria-label="WhatsApp"><img src="assets/icon-whatsapp.png" alt="WhatsApp"></a>
+      <a href="https://www.instagram.com/dna.pps/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/icon-instagram.png" alt="Instagram"></a>
+      <a href="https://www.facebook.com/profile.php?id=61563882433995" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/icon-facebook.png" alt="Facebook"></a>
     </div>
     <div class="ft-addr">Av. Vicente Simões, 955, sala 201 - Nova Pouso Alegre, Pouso Alegre - MG, 37553-465.</div>
     <div class="ft-bottom">
@@ -435,9 +520,70 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
   </div>
 </footer>
 
-<a class="wa" href="https://api.whatsapp.com/send/?phone=553599667294&text=Ol%C3%A1%21+Preciso+de+um+especialista+da+DNA.&type=phone_number&app_absent=0" target="_blank" rel="noopener" aria-label="Fale no WhatsApp">
+<a class="wa" href="#" onclick="openModal();return false;" aria-label="Fale no WhatsApp">
   <svg viewBox="0 0 32 32"><path d="M16 .4C7.4.4.4 7.4.4 16c0 2.8.7 5.4 2 7.8L.3 31.7l8.1-2.1c2.3 1.2 4.9 1.9 7.6 1.9 8.6 0 15.6-7 15.6-15.6S24.6.4 16 .4zm0 28.4c-2.5 0-4.8-.7-6.8-1.8l-.5-.3-4.8 1.3 1.3-4.7-.3-.5c-1.3-2-2-4.4-2-6.9C2.6 8.6 8.6 2.6 16 2.6S29.4 8.6 29.4 16 23.4 28.8 16 28.8zm7.4-9.7c-.4-.2-2.4-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.4-2.2-2.8-.2-.4 0-.6.2-.8.2-.2.4-.4.5-.7.2-.2.2-.4.4-.6.1-.2.1-.5 0-.7-.1-.2-.9-2.2-1.3-3-.3-.7-.6-.6-.9-.6h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1 0 1.8 1.3 3.6 1.5 3.8.2.2 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.4-1 2.7-1.9.3-.9.3-1.7.2-1.9-.1-.2-.3-.3-.7-.5z"/></svg>
 </a>
+
+<!-- ===================== POPUP QUALIFICAÇÃO DNA PPS ===================== -->
+<div id="qpopup" role="dialog" aria-modal="true" aria-labelledby="qpopup-title">
+  <div class="qcard">
+    <button class="qclose" onclick="closeModal()" aria-label="Fechar">&times;</button>
+    <div class="qcard-header">
+      <div class="qcard-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+      </div>
+      <div>
+        <h3 id="qpopup-title">Simule seu planejamento</h3>
+        <p class="qcard-subtitle">Nossos consultores entram em contato pelo WhatsApp</p>
+      </div>
+    </div>
+    <div id="qform-wrap">
+      <form id="qform" novalidate>
+        <div class="qfield">
+          <label for="qnome">Nome completo</label>
+          <input type="text" id="qnome" placeholder="Seu nome" autocomplete="name">
+          <div class="qerr" id="qnome-err">Informe seu nome completo</div>
+        </div>
+        <div class="qfield">
+          <label for="qtel">WhatsApp</label>
+          <input type="tel" id="qtel" placeholder="(00) 00000-0000" inputmode="tel" autocomplete="tel">
+          <div class="qerr" id="qtel-err">Informe um número válido com DDD</div>
+        </div>
+        <div class="qfield">
+          <label for="qemail">E-mail</label>
+          <input type="email" id="qemail" placeholder="seu@email.com" autocomplete="email">
+          <div class="qerr" id="qemail-err">Informe um e-mail válido</div>
+        </div>
+        <div class="qfield">
+          <label>Faixa de patrimônio aproximada</label>
+          <div class="qradio-group">
+            <label class="qrlabel"><input type="radio" name="patrimonio" value="menos500k"> Menos de R$500k</label>
+            <label class="qrlabel"><input type="radio" name="patrimonio" value="500k2M"> R$500k a R$2M</label>
+            <label class="qrlabel"><input type="radio" name="patrimonio" value="acima2M"> Acima de R$2M</label>
+          </div>
+          <div class="qerr" id="qpatrimonio-err">Selecione sua faixa de patrimônio</div>
+        </div>
+        <button type="submit" class="qsubmit" id="qbtn">Quero meu diagnóstico gratuito →</button>
+        <div class="qtrust"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Consulta protegida e confidencial</div>
+      </form>
+    </div>
+
+    <div class="qthanks" id="qthanks-padrao">
+      <div class="qti">✅</div>
+      <h4>Recebemos seu contato!</h4>
+      <p>Nossos consultores entrarão em contato em breve pelo WhatsApp para agendar seu diagnóstico gratuito.</p>
+      <a href="javascript:closeModal()" class="qfechar">Fechar</a>
+    </div>
+
+    <div class="qthanks" id="qthanks-ebook">
+      <div class="qti">📥</div>
+      <h4>Obrigado pelo interesse!</h4>
+      <p>Preparamos um material exclusivo que mostra como evitar pagar o inventário em dobro. Acesse gratuitamente:</p>
+      <a href="/ebook.pdf" download="5-erros-inventario-DNA-PPS.pdf" class="qebookbtn">Baixar e-book gratuito →</a>
+      <a href="javascript:closeModal()" class="qfechar">Fechar</a>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ===================== CALCULADORA ITCMD =====================
@@ -481,15 +627,91 @@ function calc(){
   set("ib",fmtBRL(merc));set("ia",fmtPct(aPct));set("ii",fmtBRL(ii));
   set("pb",fmtBRL(base)+(dirpf>0?"":" (estimado)"));set("pa",fmtPct(aPct));set("pi",fmtBRL(pi));
   set("ev",fmtBRL(eco));set("ep",ep>0?`redução de ${fmtPct(Math.round(ep))} no ITCMD`:"");
+  var hint=document.getElementById('sim-hint-ebook');
+  if(hint) hint.style.display=(merc>0&&merc<500000)?'flex':'none';
 }
 cv.value=fmtBRL(4000000);cd.value=fmtBRL(800000);calc();
 
 /* ===================== FORM (stub p/ CRM — etapa futura) ===================== */
-document.getElementById("leadForm").addEventListener("submit",function(ev){
+/* ===================== POPUP QUALIFICAÇÃO ===================== */
+function openModal(){
+  document.getElementById('qpopup').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('qpopup').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('qform-wrap').style.display='';
+  document.getElementById('qthanks-padrao').style.display='none';
+  document.getElementById('qthanks-ebook').style.display='none';
+  document.getElementById('qform').reset();
+  document.querySelectorAll('.qrlabel').forEach(function(l){l.classList.remove('sel');});
+  document.querySelectorAll('.qerr').forEach(function(e){e.style.display='none';});
+  document.querySelectorAll('.qfield input').forEach(function(i){i.classList.remove('err');});
+  document.getElementById('qbtn').disabled=false;
+  document.getElementById('qbtn').textContent='Quero meu diagnóstico gratuito →';
+}
+document.getElementById('qpopup').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+document.querySelectorAll('.qrlabel input[type=radio]').forEach(function(r){
+  r.addEventListener('change',function(){
+    document.querySelectorAll('.qrlabel').forEach(function(l){l.classList.remove('sel');});
+    this.closest('.qrlabel').classList.add('sel');
+  });
+});
+document.getElementById('qtel').addEventListener('input',function(){
+  var v=this.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>10)v=v.replace(/^(\d{2})(\d{5})(\d{4}).*/,'($1) $2-$3');
+  else if(v.length>6)v=v.replace(/^(\d{2})(\d{4})(\d*)/,'($1) $2-$3');
+  else if(v.length>2)v=v.replace(/^(\d{2})(\d*)/,'($1) $2');
+  this.value=v;
+});
+document.getElementById('qform').addEventListener('submit',function(ev){
   ev.preventDefault();
-  // TODO etapa 2: POST p/ CRM (pipeline "DNA VPS"), modelo MCK /api/leads/publico
-  this.querySelectorAll("input,button").forEach(el=>el.style.display="none");
-  document.getElementById("formOk").style.display="block";
+  var nome=document.getElementById('qnome').value.trim();
+  var tel=document.getElementById('qtel').value.trim();
+  var email=document.getElementById('qemail').value.trim();
+  var pat=document.querySelector('input[name=patrimonio]:checked');
+  var ok=true;
+  document.querySelectorAll('.qerr').forEach(function(e){e.style.display='none';});
+  document.querySelectorAll('.qfield input').forEach(function(i){i.classList.remove('err');});
+  if(!nome){document.getElementById('qnome-err').style.display='block';document.getElementById('qnome').classList.add('err');ok=false;}
+  var td=tel.replace(/\D/g,'');
+  if(td.length<10||td.length>11){document.getElementById('qtel-err').style.display='block';document.getElementById('qtel').classList.add('err');ok=false;}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('qemail-err').style.display='block';document.getElementById('qemail').classList.add('err');ok=false;}
+  if(!pat){document.getElementById('qpatrimonio-err').style.display='block';ok=false;}
+  if(!ok)return;
+  var btn=document.getElementById('qbtn');
+  btn.disabled=true;btn.textContent='Enviando...';
+  var pv=pat.value;
+  var ctx=pv==='menos500k'?'Faixa patrimônio: Menos de R$500k':pv==='500k2M'?'Faixa patrimônio: R$500k a R$2M':'Faixa patrimônio: Acima de R$2M';
+  // Dispara pixel/CAPI apenas para leads qualificados (>=500k) — não desperdiça otimização com leads ebook
+  if(pv!=='menos500k'){
+    sendCapi('Lead',{});
+    window.dataLayer=window.dataLayer||[];
+    window.dataLayer.push({event:'lead_qualified',patrimonio_faixa:pv});
+  } else {
+    window.dataLayer=window.dataLayer||[];
+    window.dataLayer.push({event:'lead_ebook',patrimonio_faixa:'menos500k'});
+  }
+  fetch('https://crm.mck.agenciaever.cloud/api/leads/publico',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({formulario_slug:pv==='menos500k'?'dna_pps_ebook':'dna_pps',nome:nome,whatsapp:tel,email:email,contexto:ctx,landing_page:window.location.href})
+  }).catch(function(){}).finally(function(){
+    document.getElementById('qform-wrap').style.display='none';
+    if(pv==='acima2M'){
+      var msgA=encodeURIComponent('Olá! Me chamo '+nome+'. Tenho interesse em planejamento patrimonial e meu patrimônio é acima de R$2 milhões.');
+      window.open('https://api.whatsapp.com/send?phone=553599667294&text='+msgA,'_blank');
+      document.getElementById('qthanks-padrao').style.display='block';
+    } else if(pv==='500k2M'){
+      var msgB=encodeURIComponent('Olá! Me chamo '+nome+'. Tenho interesse em planejamento patrimonial e meu patrimônio está entre R$500k e R$2 milhões.');
+      window.open('https://api.whatsapp.com/send?phone=553599667294&text='+msgB,'_blank');
+      document.getElementById('qthanks-padrao').style.display='block';
+    } else {
+      document.getElementById('qthanks-ebook').style.display='block';
+    }
+  });
 });
 
 /* ===================== ANIMAÇÕES DE SCROLL (reveal + parallax) ===================== */
