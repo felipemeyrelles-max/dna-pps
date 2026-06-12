@@ -246,6 +246,14 @@ document.getElementById('qform').addEventListener('submit', function(ev){
       });
     }
   }
+
+  // Google Ads conversion (mesmo label pra Lead qualificado E ebook menos500k)
+  if(typeof window.sendGoogleAdsConversion === 'function'){
+    window.sendGoogleAdsConversion('kpjZCIiq98oZEL_g1o0-', {
+      value: pv !== 'menos500k' ? value : 0,
+      currency: 'BRL'
+    });
+  }
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: pv === 'menos500k' ? 'lead_ebook' : 'lead_qualified',

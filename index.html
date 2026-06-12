@@ -727,6 +727,23 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
     }catch(e){ return ''; }
   }
 
+  // gtag stub + Google Ads config (calls antes do gtag.js carregar ficam na fila)
+  window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', 'AW-16671682623');
+
+  // Helper Google Ads conversion
+  window.sendGoogleAdsConversion = function(label, opts){
+    if(typeof window.gtag !== 'function') return;
+    var params = { send_to: 'AW-16671682623/' + label };
+    if(opts){
+      if(opts.value != null) params.value = opts.value;
+      if(opts.currency) params.currency = opts.currency;
+      if(opts.transaction_id) params.transaction_id = opts.transaction_id;
+    }
+    try{ window.gtag('event', 'conversion', params); }catch(e){}
+  };
+
   window.sendCapi = function(eventName, userData, customData){
     var eid = 'ev_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
     var cd = customData || {};
@@ -765,7 +782,7 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 })();
 </script>
 
-<script src="assets/site.js?v=20260612-FINAL2" defer></script>
+<script src="assets/site.js?v=20260612-GADS" defer></script>
 <!-- VERSAO: 20260612-FINAL -->
 
 <!-- ===================== Pixel loader (deferred — fonte ÚNICA, sem GTM) ===================== -->
@@ -782,6 +799,12 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 
     fbq('init', '1922595521595366');
     fbq('track', 'PageView');
+
+    // Google Ads gtag.js (config + queue ja inicializados no topo do body)
+    var g = document.createElement('script');
+    g.async = true;
+    g.src = 'https://www.googletagmanager.com/gtag/js?id=AW-16671682623';
+    (document.head || document.body).appendChild(g);
 
     document.querySelectorAll('a[href*="553599"],a[href*="wa.me"],.whatsapp-float,.wa,a.wa').forEach(function(el){
       el.addEventListener('click', function(){
