@@ -108,39 +108,75 @@ tbody td:first-child{font-weight:600;color:#1b1a16}
 .dl-btn:hover{opacity:.88}
 .dl-btn svg{width:16px;height:16px;flex-shrink:0}
 @media print{
+  @page{size:A4;margin:10mm 10mm}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  html,body{width:210mm;margin:0;padding:0;font-size:12px}
+  html,body{width:auto;margin:0;padding:0;font-size:9.5pt;line-height:1.42;background:#fff}
   .dl-bar{display:none!important}
-  
-  /* Cover: full page break after */
-  .cover{min-height:260mm;page-break-after:always;break-after:page;padding:40px 48px}
-  
-  /* Keep error sections together — if too long, allow break only between paragraphs */
-  .error-section .page{break-inside:avoid;page-break-inside:avoid;orphans:3;widows:3}
-  
-  /* Small self-contained blocks: never cut */
-  .callout{break-inside:avoid!important;page-break-inside:avoid!important;display:block}
-  .databox{break-inside:avoid!important;page-break-inside:avoid!important;display:block}
-  .dataitem{break-inside:avoid!important;page-break-inside:avoid!important}
-  .impact{break-inside:avoid!important;page-break-inside:avoid!important;display:block}
-  .table-wrap{break-inside:avoid!important;page-break-inside:avoid!important;display:block}
-  table{break-inside:avoid!important;page-break-inside:avoid!important}
-  
+  .sep-divider{display:none!important}
+
+  /* Tighten in-page padding so blocks fit better */
+  .page{padding:0 8mm;max-width:none}
+  .intro-section{padding:24px 26px;border-left-width:4px;font-size:11pt}
+  .intro-section p{margin-bottom:12px;font-size:11pt;line-height:1.6}
+  .error-section{padding:10px 0 6px}
+  .error-section .page{padding:0 8mm}
+  /* Intro page — center vertically */
+  body > .page{min-height:265mm;display:flex;flex-direction:column;justify-content:center;padding-bottom:0!important}
+
+  /* Cover: full A4 page */
+  .cover{min-height:275mm;page-break-after:always;break-after:page;padding:20mm 16mm;display:flex;flex-direction:column;justify-content:space-between}
+  .cover-body{padding:24mm 0 16mm;flex:1;display:flex;flex-direction:column;justify-content:center}
+  .cover-num{font-size:78px;margin-bottom:-12px}
+  .cover-title{font-size:34px;line-height:1.15;margin-bottom:18px}
+  .cover-subtitle{font-size:13.5px}
+
+  /* Each error starts on a new page — prevents mid-section cuts */
+  .error-section{page-break-before:always;break-before:page}
+  .cta-section{page-break-before:always;break-before:page;padding:60px 28px;min-height:265mm;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .sources-section{page-break-before:always;break-before:page;padding:30px 28px;min-height:265mm}
+
+  /* Headings — tighter */
+  .error-tag{margin-bottom:10px;padding:4px 11px;font-size:10px}
+  .error-title{font-size:22px!important;margin-bottom:6px;line-height:1.18}
+  .error-subtitle{font-size:13px;margin-bottom:14px}
+
+  /* Small self-contained blocks: never cut, tighter margins */
+  .callout,.databox,.dataitem,.impact,.table-wrap,table{
+    break-inside:avoid!important;page-break-inside:avoid!important;
+  }
+  .callout{display:block;margin:10px 0;padding:14px 18px}
+  .callout p{font-size:9.5pt;line-height:1.45}
+  .impact{display:block;margin:10px 0;padding:14px 18px}
+  .impact p{font-size:10pt;line-height:1.45;padding-left:6px}
+  .impact::before{font-size:38px;top:-4px;left:14px}
+  .databox{display:grid;margin:10px 0;gap:8px}
+  .dataitem{padding:10px 12px;border-top-width:2px}
+  .dataitem .dnum{font-size:18px;margin-bottom:2px}
+  .dataitem .dlabel{font-size:10px;line-height:1.3}
+  .table-wrap{display:block;margin:10px 0}
+  table{font-size:10px}
+  thead th{padding:6px 9px}
+  tbody td{padding:5px 9px}
+
   /* Headings: keep with following content */
-  .error-tag{break-after:avoid!important;page-break-after:avoid!important}
-  .error-title{break-after:avoid!important;page-break-after:avoid!important}
-  .error-subtitle{break-after:avoid!important;page-break-after:avoid!important}
-  h2,h3,h4{break-after:avoid!important;page-break-after:avoid!important;orphans:3;widows:3}
-  
-  /* CTA and sources */
-  .cta-section{break-inside:avoid;page-break-inside:avoid}
-  .sources-section{break-inside:avoid;page-break-inside:avoid}
-  
-  /* Sep divider */
-  .sep-divider{break-after:avoid;page-break-after:avoid}
-  
-  /* Paragraphs: orphans/widows */
-  p{orphans:3;widows:3}
+  .error-tag,.error-title,.error-subtitle,h2,h3,h4{
+    break-after:avoid!important;page-break-after:avoid!important;
+  }
+  .error-tag+*,.error-title+*,.error-subtitle+*{break-before:avoid!important;page-break-before:avoid!important}
+
+  /* Paragraphs — tighter */
+  p{orphans:2;widows:2;margin-bottom:7px}
+  .error-body{font-size:9.5pt;line-height:1.45}
+  .error-body p{margin-bottom:7px}
+
+  /* CTA */
+  .cta-section h2{font-size:30px;margin-bottom:12px}
+  .cta-section p{font-size:14px;margin-bottom:24px}
+
+  /* Sources */
+  .sources-section h4{font-size:12px;margin-bottom:12px}
+  .sources-section li{font-size:11px;line-height:1.45}
+  .sources-section ul{gap:4px}
 }
 </style>
 </head>
