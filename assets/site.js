@@ -119,6 +119,28 @@ function calc(){
     totMin, totMax, totBd, eco, proc: procEff, conf,
     imoveis, outros, ir
   };
+
+  trackCalcViewContent();
+}
+
+let __vcFired = false, __vcTimer = null;
+function trackCalcViewContent(){
+  if(__vcFired) return;
+  clearTimeout(__vcTimer);
+  __vcTimer = setTimeout(function(){
+    const s = window._calcState;
+    if(!s || s.pat < 100000) return; // ignora patrimônio bobo
+    __vcFired = true;
+    if(typeof window.sendCapi === 'function'){
+      window.sendCapi('ViewContent', {}, {
+        content_name: 'calculadora-itcmd',
+        content_category: 'simulacao',
+        content_type: 'calculator',
+        currency: 'BRL',
+        value: Math.round(s.totBd || 0)
+      });
+    }
+  }, 1500);
 }
 
 cv.value=fmtBRL(4000000);
@@ -148,6 +170,15 @@ function openModal(){
   }
   document.getElementById('qpopup').classList.add('open');
   document.body.style.overflow='hidden';
+
+  if(typeof window.sendCapi === 'function'){
+    window.sendCapi('InitiateCheckout', {}, {
+      content_name: 'modal-qualificacao',
+      content_category: 'simulacao',
+      currency: 'BRL',
+      value: s && s.eco ? Math.round(s.eco) : 0
+    });
+  }
 }
 function closeModal(){
   document.getElementById('qpopup').classList.remove('open');
@@ -202,15 +233,35 @@ document.getElementById('qform').addEventListener('submit', function(ev){
   }
   const ctx=ctxLines.join(' | ');
 
-  // Pixel/CAPI só pra leads qualificados
-  if(pv!=='menos500k'){
-    sendCapi('Lead',{});
-    window.dataLayer=window.dataLayer||[];
-    window.dataLayer.push({event:'lead_qualified',patrimonio_faixa:pv});
-  } else {
-    window.dataLayer=window.dataLayer||[];
-    window.dataLayer.push({event:'lead_ebook',patrimonio_faixa:'menos500k'});
+  // Pixel/CAPI — user_data com PII pra Advanced Matching, value = economia estimada
+  const firstName = nome.split(/\s+/)[0] || '';
+  const userData = { email: email, phone: tel, firstName: firstName };
+  const value = s && s.eco ? Math.round(s.eco) : 0;
+
+  if(typeof window.sendCapi === 'function'){
+    if(pv !== 'menos500k'){
+      window.sendCapi('Lead', userData, {
+        content_category: pv,
+        content_name: 'dna-pps-qualificado',
+        currency: 'BRL',
+        value: value
+      });
+    } else {
+      window.sendCapi('CompleteRegistration', userData, {
+        content_category: 'ebook-menos500k',
+        content_name: 'dna-pps-ebook',
+        currency: 'BRL',
+        value: 0
+      });
+    }
   }
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event: pv === 'menos500k' ? 'lead_ebook' : 'lead_qualified',
+    patrimonio_faixa: pv,
+    value: value,
+    currency: 'BRL'
+  });
 
   fetch('https://crm.mck.agenciaever.cloud/api/leads/publico',{
     method:'POST',

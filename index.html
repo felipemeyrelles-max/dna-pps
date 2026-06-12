@@ -536,9 +536,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="dark-sec" style="padding-top:0">
   <div class="wrap">
     <div class="dirs">
-      <div class="dir"><img src="assets/dr-robson.webp" alt="Robson Eduardo B. Krepp" width="600" height="1067" loading="lazy" decoding="async"><h3>Robson Eduardo B. Krepp</h3><p>Diretor Comercial</p></div>
-      <div class="dir"><img src="assets/dr-rafaelli.webp" alt="Rafaelli Moreira Cesar" width="600" height="1067" loading="lazy" decoding="async"><h3>Rafaelli Moreira Cesar</h3><p>Diretor Administrativo</p></div>
-      <div class="dir"><img src="assets/dr-paulo.webp" alt="Paulo Henrique Loyola" width="600" height="1067" loading="lazy" decoding="async"><h3>Paulo Henrique Loyola</h3><p>Estrategista-chefe</p></div>
+      <div class="dir"><img src="assets/dr-robson.webp" alt="Robson Eduardo B. Krepp" width="600" height="500" loading="lazy" decoding="async"><h3>Robson Eduardo B. Krepp</h3><p>Diretor Comercial</p></div>
+      <div class="dir"><img src="assets/dr-rafaelli.webp" alt="Rafaelli Moreira Cesar" width="600" height="500" loading="lazy" decoding="async"><h3>Rafaelli Moreira Cesar</h3><p>Diretor Administrativo</p></div>
+      <div class="dir"><img src="assets/dr-paulo.webp" alt="Paulo Henrique Loyola" width="600" height="500" loading="lazy" decoding="async"><h3>Paulo Henrique Loyola</h3><p>Estrategista-chefe</p></div>
     </div>
   </div>
 </section>
@@ -648,54 +648,125 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
-<script src="assets/site.js?v=20260612" defer></script>
+<!-- ===================== Tracking init (queue available imediato) ===================== -->
+<script>
+(function(){
+  window.dataLayer = window.dataLayer || [];
 
-<!-- ===================== Tracking (deferred for performance) ===================== -->
+  // fbq queue stub — calls antes do fbevents.js carregar ficam na fila
+  (function(f){
+    if(f.fbq) return;
+    var n = f.fbq = function(){ n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+    if(!f._fbq) f._fbq = n;
+    n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
+  })(window);
+
+  function getCookie(name){
+    var m = document.cookie.match('(?:^|;\\s*)' + name + '=([^;]*)');
+    return m ? decodeURIComponent(m[1]) : undefined;
+  }
+  window.__getCookie = getCookie;
+
+  // _fbc bootstrap (fbclid → cookie persistente)
+  (function(){
+    if(getCookie('_fbc')) return;
+    var p = new URLSearchParams(window.location.search);
+    var fbclid = p.get('fbclid');
+    if(!fbclid) return;
+    var v = 'fb.1.' + Date.now() + '.' + fbclid;
+    document.cookie = '_fbc=' + v + '; max-age=' + (90*86400) + '; path=/; SameSite=Lax';
+  })();
+
+  async function sha256(str){
+    try{
+      var buf = new TextEncoder().encode(String(str).toLowerCase().trim());
+      var hash = await crypto.subtle.digest('SHA-256', buf);
+      return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    }catch(e){ return ''; }
+  }
+
+  // Envia evento browser (Pixel) + server (CAPI) com dedup via event_id
+  window.sendCapi = function(eventName, userData, customData){
+    var eid = 'ev_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+    var cd = customData || {};
+    var raw = userData || {};
+
+    try{ fbq('track', eventName, cd, {eventID: eid}); }catch(e){}
+
+    // dataLayer pra GTM
+    window.dataLayer.push({event: 'capi_' + eventName.toLowerCase(), event_id: eid, custom_data: cd});
+
+    // Hash PII + monta payload CAPI
+    Promise.all([
+      raw.email ? sha256(raw.email) : Promise.resolve(''),
+      raw.phone ? sha256(String(raw.phone).replace(/\D/g,'')) : Promise.resolve(''),
+      raw.firstName ? sha256(raw.firstName) : Promise.resolve('')
+    ]).then(function(h){
+      var ud = {};
+      if(h[0]) ud.em = h[0];
+      if(h[1]) ud.ph = h[1];
+      if(h[2]) ud.fn = h[2];
+      var fbp = getCookie('_fbp'); if(fbp) ud.fbp = fbp;
+      var fbc = getCookie('_fbc'); if(fbc) ud.fbc = fbc;
+      ud.client_user_agent = navigator.userAgent;
+
+      fetch('/api/capi', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          event_name: eventName,
+          event_id: eid,
+          event_source_url: window.location.href,
+          user_data: ud,
+          custom_data: cd
+        })
+      }).catch(function(){});
+    });
+  };
+})();
+</script>
+
+<script src="assets/site.js?v=20260612b" defer></script>
+
+<!-- ===================== Tracking lib loaders (deferred pra Lighthouse) ===================== -->
 <script>
 (function(){
   function loadTracking(){
-    if (window.__trackingLoaded) return;
+    if(window.__trackingLoaded) return;
     window.__trackingLoaded = true;
 
-    // Google Tag Manager
+    // GTM
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-5CNV4XH5');
 
-    // Meta Pixel
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init','1922595521595366');
-    fbq('track','PageView');
+    // Meta Pixel — fbevents.js (queue stub já inicializado no topo do body)
+    var fs = document.createElement('script');
+    fs.async = true;
+    fs.src = 'https://connect.facebook.net/en_US/fbevents.js';
+    (document.head || document.body).appendChild(fs);
 
-    window.sendCapi = function(eventName,userData){
-      var eid='ev_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
-      try{ fbq('track',eventName,{},{eventID:eid}); }catch(e){}
-      fetch('/api/capi',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({event_name:eventName,event_id:eid,
-          event_source_url:window.location.href,user_data:userData||{}})
-      }).catch(function(){});
-    };
+    fbq('init', '1922595521595366');
+    fbq('track', 'PageView');
 
-    document.querySelectorAll('a[href*="553599"],a[href*="wa.me"],.whatsapp-float').forEach(function(el){
-      el.addEventListener('click',function(){window.sendCapi('Contact',{});});
+    // WhatsApp clicks → Contact
+    document.querySelectorAll('a[href*="553599"],a[href*="wa.me"],.whatsapp-float,.wa,a.wa').forEach(function(el){
+      el.addEventListener('click', function(){
+        try{ window.sendCapi('Contact', {}, {content_category: 'whatsapp-direto'}); }catch(e){}
+      });
     });
   }
 
-  // Fire on first interaction (fast for real users) or 5s after load (Lighthouse-friendly)
   function arm(){
     ['scroll','mousemove','touchstart','keydown','click'].forEach(function(ev){
       window.addEventListener(ev, loadTracking, {once:true, passive:true});
     });
-    setTimeout(loadTracking, 5000);
+    setTimeout(loadTracking, 3000);
   }
-  if (document.readyState === 'complete') { arm(); }
-  else { window.addEventListener('load', arm, {once:true}); }
+  if(document.readyState === 'complete') arm();
+  else window.addEventListener('load', arm, {once:true});
 })();
 </script>
 <noscript><img height="1" width="1" style="display:none" alt=""
