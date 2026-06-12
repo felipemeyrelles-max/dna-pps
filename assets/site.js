@@ -170,15 +170,6 @@ function openModal(){
   }
   document.getElementById('qpopup').classList.add('open');
   document.body.style.overflow='hidden';
-
-  if(typeof window.sendCapi === 'function'){
-    window.sendCapi('InitiateCheckout', {}, {
-      content_name: 'modal-qualificacao',
-      content_category: 'simulacao',
-      currency: 'BRL',
-      value: s && s.eco ? Math.round(s.eco) : 0
-    });
-  }
 }
 function closeModal(){
   document.getElementById('qpopup').classList.remove('open');
