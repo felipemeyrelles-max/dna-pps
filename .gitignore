@@ -1,0 +1,5 @@
+_orig/
+assets/_orig/
+*.bak
+.DS_Store
+node_modules/

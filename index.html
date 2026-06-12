@@ -2,47 +2,20 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5CNV4XH5');</script>
-<!-- End Google Tag Manager -->
-<!-- Meta Pixel -->
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','1922595521595366');
-fbq('track','PageView');
-function sendCapi(eventName,userData){
-  var eid='ev_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
-  fbq('track',eventName,{},{eventID:eid});
-  fetch('/api/capi',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({event_name:eventName,event_id:eid,
-      event_source_url:window.location.href,user_data:userData||{}})
-  }).catch(function(){});
-}
-document.addEventListener('DOMContentLoaded',function(){
-  document.querySelectorAll('a[href*="553599"],a[href*="wa.me"],.whatsapp-float').forEach(function(el){
-    el.addEventListener('click',function(){sendCapi('Contact',{});});
-  });
-});
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1922595521595366&ev=PageView&noscript=1"/></noscript>
-<!-- End Meta Pixel -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>HOME | DNA PPS — Planejamento Patrimonial e Sucessório</title>
 <meta name="description" content="O Inventário é um problema e a DNA PPS pode evitá-lo. Planejamento Patrimonial e Sucessório para proteger seu patrimônio e reduzir custos." />
 <link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="assets/logo-dna.png">
+<link rel="icon" type="image/webp" href="assets/logo-dna.webp">
+
+<!-- Preload LCP -->
+<link rel="preload" as="image" href="assets/hero-poster.webp" imagesrcset="assets/hero-poster-mobile.webp 1280w, assets/hero-poster.webp 1920w" imagesizes="100vw" fetchpriority="high">
+
+<!-- Fonts (non-blocking) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&family=Wix+Madefor+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&family=Wix+Madefor+Text:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&family=Wix+Madefor+Text:wght@400;500;600&display=swap"></noscript>
 <style>
 /* =========================================================================
    DNA PPS — Reconstrução fiel da LP (fora do Wix)
@@ -340,7 +313,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a href="#contato">CONTATOS</a>
     </nav>
     <div class="brand">
-      <img src="assets/logo-dna.png" alt="DNA PPS" />
+      <img src="assets/logo-dna.webp" alt="DNA PPS" width="83" height="52" decoding="async" />
       <div class="bt">Planejamento Patrimonial<br>e Sucessório</div>
     </div>
     <button class="burger" aria-label="Menu" onclick="document.querySelector('.nav').style.display=(getComputedStyle(document.querySelector('.nav')).display==='none'?'flex':'none')">☰</button>
@@ -349,7 +322,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="topo">
-  <img class="poster" src="assets/hero-poster.jpg" alt="">
+  <picture>
+    <source type="image/webp" media="(max-width: 768px)" srcset="assets/hero-poster-mobile.webp">
+    <source type="image/webp" srcset="assets/hero-poster.webp">
+    <img class="poster" src="assets/hero-poster.jpg" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+  </picture>
   <div class="wrap">
     <h1>O Inventário é um problema e a DNA PPS pode evitá-lo</h1>
     <p>Perder um ente querido nunca é fácil, o que fica ainda mais delicado por conta dos altos custos para a transmissão da herança e possíveis conflitos na partilha dos bens.</p>
@@ -363,7 +340,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="wrap">
     <div class="media-row">
       <div class="media">
-        <img src="assets/planejamento-poster.jpg" alt="Planejamento Patrimonial e Sucessório">
+        <img src="assets/planejamento-poster.webp" alt="Planejamento Patrimonial e Sucessório" width="640" height="360" loading="lazy" decoding="async">
       </div>
       <div>
         <h2>Planejamento Patrimonial e Sucessório.</h2>
@@ -375,7 +352,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <div class="media-row rev" id="tributacao">
       <div class="media" style="aspect-ratio:512/500;background:#e9e4da">
-        <img src="assets/leao-receita.webp" alt="Atenção à tributação sobre o inventário" style="object-fit:contain">
+        <img src="assets/leao-receita.webp" alt="Atenção à tributação sobre o inventário" width="1060" height="1024" loading="lazy" decoding="async" style="object-fit:contain">
       </div>
       <div>
         <h2>Atenção para mudanças na tributação sobre o inventário.</h2>
@@ -400,7 +377,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </ul>
     </div>
     <div class="vid">
-      <img class="logo-static" src="assets/logo-dna.png" alt="DNA PPS">
+      <img class="logo-static" src="assets/logo-dna.webp" alt="DNA PPS" width="480" height="300" loading="lazy" decoding="async">
     </div>
   </div>
 </section>
@@ -559,9 +536,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="dark-sec" style="padding-top:0">
   <div class="wrap">
     <div class="dirs">
-      <div class="dir"><img src="assets/dr-robson.jpeg" alt="Robson Eduardo B. Krepp"><h3>Robson Eduardo B. Krepp</h3><p>Diretor Comercial</p></div>
-      <div class="dir"><img src="assets/dr-rafaelli.jpeg" alt="Rafaelli Moreira Cesar"><h3>Rafaelli Moreira Cesar</h3><p>Diretor Administrativo</p></div>
-      <div class="dir"><img src="assets/dr-paulo.jpeg" alt="Paulo Henrique Loyola"><h3>Paulo Henrique Loyola</h3><p>Estrategista-chefe</p></div>
+      <div class="dir"><img src="assets/dr-robson.webp" alt="Robson Eduardo B. Krepp" width="600" height="1067" loading="lazy" decoding="async"><h3>Robson Eduardo B. Krepp</h3><p>Diretor Comercial</p></div>
+      <div class="dir"><img src="assets/dr-rafaelli.webp" alt="Rafaelli Moreira Cesar" width="600" height="1067" loading="lazy" decoding="async"><h3>Rafaelli Moreira Cesar</h3><p>Diretor Administrativo</p></div>
+      <div class="dir"><img src="assets/dr-paulo.webp" alt="Paulo Henrique Loyola" width="600" height="1067" loading="lazy" decoding="async"><h3>Paulo Henrique Loyola</h3><p>Estrategista-chefe</p></div>
     </div>
   </div>
 </section>
@@ -570,7 +547,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="dark-sec" style="padding-top:0">
   <div class="wrap parc">
     <h3>Parceiros</h3>
-    <img src="assets/logo-mck.png" alt="MCK Advogados">
+    <img src="assets/logo-mck.webp" alt="MCK Advogados" width="333" height="215" loading="lazy" decoding="async">
   </div>
 </section>
 
@@ -592,9 +569,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="ft-logo">DNA</div>
     <div class="ft-mail">Email de contato: <a href="mailto:contato@ppsdna.com.br">contato@ppsdna.com.br</a></div>
     <div class="ft-social">
-      <a href="https://api.whatsapp.com/send?phone=55359966729400&text=Ol%C3%A1%2C%20vim%20do%20site%2C%20quero%20fazer%20uma%20simula%C3%A7%C3%A3o%20com%20especialistas%20da%20DNA" target="_blank" rel="noopener" aria-label="WhatsApp"><img src="assets/icon-whatsapp.png" alt="WhatsApp"></a>
-      <a href="https://www.instagram.com/dna.pps/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/icon-instagram.png" alt="Instagram"></a>
-      <a href="https://www.facebook.com/profile.php?id=61563882433995" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/icon-facebook.png" alt="Facebook"></a>
+      <a href="https://api.whatsapp.com/send?phone=553599667294&text=Ol%C3%A1%2C%20vim%20do%20site%2C%20quero%20fazer%20uma%20simula%C3%A7%C3%A3o%20com%20especialistas%20da%20DNA" target="_blank" rel="noopener" aria-label="WhatsApp"><img src="assets/icon-whatsapp.png" alt="WhatsApp" width="32" height="32" loading="lazy" decoding="async"></a>
+      <a href="https://www.instagram.com/dna.pps/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/icon-instagram.png" alt="Instagram" width="32" height="32" loading="lazy" decoding="async"></a>
+      <a href="https://www.facebook.com/profile.php?id=61563882433995" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/icon-facebook.png" alt="Facebook" width="32" height="32" loading="lazy" decoding="async"></a>
     </div>
     <div class="ft-addr">Av. Vicente Simões, 955, sala 201 - Nova Pouso Alegre, Pouso Alegre - MG, 37553-465.</div>
     <div class="ft-bottom">
@@ -604,7 +581,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </footer>
 
-<a class="wa" href="https://api.whatsapp.com/send?phone=55359966729400&text=Ol%C3%A1%2C%20vim%20do%20site%2C%20quero%20fazer%20uma%20simula%C3%A7%C3%A3o%20com%20especialistas%20da%20DNA" target="_blank" rel="noopener" aria-label="Fale no WhatsApp">
+<a class="wa" href="https://api.whatsapp.com/send?phone=553599667294&text=Ol%C3%A1%2C%20vim%20do%20site%2C%20quero%20fazer%20uma%20simula%C3%A7%C3%A3o%20com%20especialistas%20da%20DNA" target="_blank" rel="noopener" aria-label="Fale no WhatsApp">
   <svg viewBox="0 0 32 32"><path d="M16 .4C7.4.4.4 7.4.4 16c0 2.8.7 5.4 2 7.8L.3 31.7l8.1-2.1c2.3 1.2 4.9 1.9 7.6 1.9 8.6 0 15.6-7 15.6-15.6S24.6.4 16 .4zm0 28.4c-2.5 0-4.8-.7-6.8-1.8l-.5-.3-4.8 1.3 1.3-4.7-.3-.5c-1.3-2-2-4.4-2-6.9C2.6 8.6 8.6 2.6 16 2.6S29.4 8.6 29.4 16 23.4 28.8 16 28.8zm7.4-9.7c-.4-.2-2.4-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.4-2.2-2.8-.2-.4 0-.6.2-.8.2-.2.4-.4.5-.7.2-.2.2-.4.4-.6.1-.2.1-.5 0-.7-.1-.2-.9-2.2-1.3-3-.3-.7-.6-.6-.9-.6h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1 0 1.8 1.3 3.6 1.5 3.8.2.2 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.4-1 2.7-1.9.3-.9.3-1.7.2-1.9-.1-.2-.3-.3-.7-.5z"/></svg>
 </a>
 
@@ -671,247 +648,57 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
+<script src="assets/site.js?v=20260612" defer></script>
+
+<!-- ===================== Tracking (deferred for performance) ===================== -->
 <script>
-/* ===================== CALCULADORA ITCMD =====================
-   >>> EDITAR ALÍQUOTAS: objeto ALIQUOTAS_ITCMD. "prog:true" = estado progressivo
-   (valor é alíquota representativa única). PERCENTUAL_BASE_PADRAO = base do
-   planejamento quando o DIRPF não é informado. */
-const ALIQUOTAS_ITCMD = {
-  AC:{nome:"Acre",aliquota:4,prog:true}, AL:{nome:"Alagoas",aliquota:4,prog:false},
-  AP:{nome:"Amapá",aliquota:4,prog:false}, AM:{nome:"Amazonas",aliquota:2,prog:false},
-  BA:{nome:"Bahia",aliquota:8,prog:true}, CE:{nome:"Ceará",aliquota:6,prog:true},
-  DF:{nome:"Distrito Federal",aliquota:6,prog:true}, ES:{nome:"Espírito Santo",aliquota:4,prog:false},
-  GO:{nome:"Goiás",aliquota:4,prog:true}, MA:{nome:"Maranhão",aliquota:4,prog:false},
-  MT:{nome:"Mato Grosso",aliquota:4,prog:true}, MS:{nome:"Mato Grosso do Sul",aliquota:6,prog:false},
-  MG:{nome:"Minas Gerais",aliquota:5,prog:false}, PA:{nome:"Pará",aliquota:4,prog:false},
-  PB:{nome:"Paraíba",aliquota:8,prog:true}, PR:{nome:"Paraná",aliquota:4,prog:false},
-  PE:{nome:"Pernambuco",aliquota:5,prog:false}, PI:{nome:"Piauí",aliquota:4,prog:false},
-  RJ:{nome:"Rio de Janeiro",aliquota:8,prog:true}, RN:{nome:"Rio Grande do Norte",aliquota:4,prog:false},
-  RS:{nome:"Rio Grande do Sul",aliquota:6,prog:true}, RO:{nome:"Rondônia",aliquota:4,prog:true},
-  RR:{nome:"Roraima",aliquota:4,prog:false}, SC:{nome:"Santa Catarina",aliquota:8,prog:true},
-  SP:{nome:"São Paulo",aliquota:4,prog:false}, SE:{nome:"Sergipe",aliquota:4,prog:false},
-  TO:{nome:"Tocantins",aliquota:4,prog:true}
-};
-const UF_PADRAO = "MG";
-const PHONE = "5535996672940";
+(function(){
+  function loadTracking(){
+    if (window.__trackingLoaded) return;
+    window.__trackingLoaded = true;
 
-// Parâmetros de custo
-const HONORARIOS_PCT = 0.10;
-const CUSTAS_EXTRA_PCT = 0.03;
-const CUSTAS_JUD_PCT = 0.05;
-const GANHO_CAPITAL_PCT = 0.15;
-const BASE_IR_PADRAO_PCT = 0.20;
-const ESTRUTURACAO_PCT = 0.025;
-const LITIGIO_BOOST = 1.25;
-const PLAN_ITCMD_FRAC = 2/3;
+    // Google Tag Manager
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5CNV4XH5');
 
-const fmtBRL = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-const fmtBRLnice = v => Math.round(v).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});
-const fmtPct = v => (Number.isInteger(v)? v : v.toFixed(1).replace(".",",")) + "%";
-const soDig = s => (s||"").replace(/\D/g,"");
-const num = s => { const d=soDig(s); return d?parseInt(d,10)/100:0; };
-function mask(el){el.addEventListener("input",()=>{const n=num(el.value);el.value=n>0?fmtBRL(n):"";calc();});}
+    // Meta Pixel
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init','1922595521595366');
+    fbq('track','PageView');
 
-const selUF=document.getElementById("cuf");
-Object.keys(ALIQUOTAS_ITCMD).sort((a,b)=>ALIQUOTAS_ITCMD[a].nome.localeCompare(ALIQUOTAS_ITCMD[b].nome,"pt-BR")).forEach(uf=>{
-  const o=document.createElement("option");
-  o.value=uf;o.textContent=`${ALIQUOTAS_ITCMD[uf].nome} (${uf}) — ${fmtPct(ALIQUOTAS_ITCMD[uf].aliquota)}`;
-  selUF.appendChild(o);
-});
-selUF.value=UF_PADRAO;
+    window.sendCapi = function(eventName,userData){
+      var eid='ev_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+      try{ fbq('track',eventName,{},{eventID:eid}); }catch(e){}
+      fetch('/api/capi',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({event_name:eventName,event_id:eid,
+          event_source_url:window.location.href,user_data:userData||{}})
+      }).catch(function(){});
+    };
 
-const cv=document.getElementById("cv"),co=document.getElementById("co"),cd=document.getElementById("cd");
-mask(cv);mask(co);mask(cd);
-selUF.addEventListener("change",calc);
-document.getElementById("ch").addEventListener("change",calc);
-document.querySelectorAll('input[name=proc]').forEach(r=>r.addEventListener("change",calc));
-const chkConf=document.getElementById("conflito");
-chkConf.addEventListener("change",()=>{
-  document.getElementById("chkConf").classList.toggle("on",chkConf.checked);
-  if(chkConf.checked){document.querySelector('input[name=proc][value=jud]').checked=true;}
-  calc();
-});
-
-const set=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
-
-function calc(){
-  const imoveis=num(cv.value), outros=num(co.value), ir=num(cd.value);
-  const pat = imoveis+outros;
-  const uf=selUF.value, aPct=ALIQUOTAS_ITCMD[uf].aliquota, a=aPct/100;
-  const proc=document.querySelector('input[name=proc]:checked').value;
-  const conf=chkConf.checked;
-  const procEff = conf ? "jud" : proc;
-
-  if(pat<=0){
-    ["rmin","rmax","invItcmd","invHon","invCust","invGc","invTot","planItcmd","planEst","planTot","ecoVal"].forEach(id=>set(id,"—"));
-    set("aliqLabel","—");set("ecoPct","");set("rnote","Preencha o patrimônio para ver a estimativa.");
-    window._calcState = null;
-    return;
+    document.querySelectorAll('a[href*="553599"],a[href*="wa.me"],.whatsapp-float').forEach(function(el){
+      el.addEventListener('click',function(){window.sendCapi('Contact',{});});
+    });
   }
 
-  const itcmdInv = pat * a;
-  const baseIR = ir>0 ? ir : pat * BASE_IR_PADRAO_PCT;
-  const gcBase = Math.max(0, pat - baseIR);
-
-  let totMin = itcmdInv + (pat * CUSTAS_EXTRA_PCT) + (gcBase * 0.15);
-  let totMax = itcmdInv + (pat * HONORARIOS_PCT) + (pat * CUSTAS_JUD_PCT) + (gcBase * 0.225);
-  if(conf) totMax *= LITIGIO_BOOST;
-
-  const hon = procEff==="jud" ? pat * HONORARIOS_PCT : 0;
-  const cust = procEff==="jud" ? pat * CUSTAS_JUD_PCT : pat * CUSTAS_EXTRA_PCT;
-  const gc = gcBase * GANHO_CAPITAL_PCT;
-  let totBd = itcmdInv + hon + cust + gc;
-  if(conf) totBd *= LITIGIO_BOOST;
-
-  const itcmdPlan = baseIR * PLAN_ITCMD_FRAC * a;
-  const estrut = pat * ESTRUTURACAO_PCT;
-  const totPlan = itcmdPlan + estrut;
-
-  const eco = Math.max(0, totBd - totPlan);
-  const ecoPct = totBd>0 ? eco/totBd*100 : 0;
-
-  set("aliqLabel", fmtPct(aPct));
-  set("rmin", fmtBRLnice(totMin));
-  set("rmax", fmtBRLnice(totMax));
-  set("rnote", `Faixa baseada em patrimônio total de ${fmtBRLnice(pat)} em ${ALIQUOTAS_ITCMD[uf].nome} (${uf}). Mínimo = extrajudicial sem litígio. Máximo = ${procEff==="jud"?"judicial":"extrajudicial"} com todos os custos${conf?" + conflito familiar":""}.`);
-
-  set("invItcmd", fmtBRLnice(itcmdInv));
-  set("invHon", procEff==="jud" ? fmtBRLnice(hon) : "Não se aplica");
-  set("invCust", fmtBRLnice(cust));
-  set("invGc", fmtBRLnice(gc));
-  set("invTot", fmtBRLnice(totBd));
-
-  set("planItcmd", fmtBRLnice(itcmdPlan));
-  set("planEst", fmtBRLnice(estrut));
-  set("planTot", fmtBRLnice(totPlan));
-
-  set("ecoVal", fmtBRLnice(eco));
-  set("ecoPct", ecoPct>0 ? `≈ ${fmtPct(Math.round(ecoPct))} menos que o inventário` : "");
-
-  window._calcState = {
-    pat, uf, ufNome: ALIQUOTAS_ITCMD[uf].nome,
-    totMin, totMax, totBd, eco, proc: procEff, conf,
-    imoveis, outros, ir
-  };
-}
-
-cv.value=fmtBRL(4000000);
-co.value=fmtBRL(0);
-cd.value=fmtBRL(800000);
-calc();
-
-/* ===================== POPUP QUALIFICAÇÃO ===================== */
-function patrimonioBracket(pat){
-  if(pat < 500000) return "menos500k";
-  if(pat < 1000000) return "500k1M";
-  if(pat <= 10000000) return "1M10M";
-  return "acima10M";
-}
-
-function openModal(){
-  const s = window._calcState;
-  const prefill = document.getElementById('qPrefillSummary');
-  if(s && s.pat > 0){
-    const bracket = patrimonioBracket(s.pat);
-    const radio = document.querySelector(`input[name=patrimonio][value=${bracket}]`);
-    if(radio) radio.checked = true;
-    prefill.style.display = 'flex';
-    prefill.innerHTML = '<span><strong>Sua simulação:</strong> patrimônio de '+fmtBRLnice(s.pat)+' em '+s.ufNome+' · estimativa '+fmtBRLnice(s.totMin)+' a '+fmtBRLnice(s.totMax)+'</span>';
-  } else {
-    prefill.style.display = 'none';
+  // Fire on first interaction (fast for real users) or 5s after load (Lighthouse-friendly)
+  function arm(){
+    ['scroll','mousemove','touchstart','keydown','click'].forEach(function(ev){
+      window.addEventListener(ev, loadTracking, {once:true, passive:true});
+    });
+    setTimeout(loadTracking, 5000);
   }
-  document.getElementById('qpopup').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeModal(){
-  document.getElementById('qpopup').classList.remove('open');
-  document.body.style.overflow='';
-  document.getElementById('qform-wrap').style.display='';
-  document.getElementById('qthanks-padrao').style.display='none';
-  document.getElementById('qthanks-ebook').style.display='none';
-  document.querySelectorAll('.qerr').forEach(e=>e.style.display='none');
-  document.querySelectorAll('.qfield input').forEach(i=>i.classList.remove('err'));
-  document.getElementById('qbtn').disabled=false;
-  document.getElementById('qbtn').textContent='Quero meu diagnóstico gratuito →';
-}
-document.getElementById('qpopup').addEventListener('click', e=>{if(e.target.id==='qpopup') closeModal();});
-document.addEventListener('keydown', e=>{if(e.key==='Escape') closeModal();});
-
-document.getElementById('qtel').addEventListener('input', function(){
-  let v=this.value.replace(/\D/g,'').slice(0,11);
-  if(v.length>10) v=v.replace(/^(\d{2})(\d{5})(\d{4}).*/,'($1) $2-$3');
-  else if(v.length>6) v=v.replace(/^(\d{2})(\d{4})(\d*)/,'($1) $2-$3');
-  else if(v.length>2) v=v.replace(/^(\d{2})(\d*)/,'($1) $2');
-  this.value=v;
-});
-
-document.getElementById('qform').addEventListener('submit', function(ev){
-  ev.preventDefault();
-  const nome=document.getElementById('qnome').value.trim();
-  const tel=document.getElementById('qtel').value.trim();
-  const email=document.getElementById('qemail').value.trim();
-  const pat=document.querySelector('input[name=patrimonio]:checked');
-  let ok=true;
-  document.querySelectorAll('.qerr').forEach(e=>e.style.display='none');
-  document.querySelectorAll('.qfield input').forEach(i=>i.classList.remove('err'));
-
-  if(!nome){document.getElementById('qnome-err').style.display='block';document.getElementById('qnome').classList.add('err');ok=false;}
-  const td=tel.replace(/\D/g,'');
-  if(td.length<10||td.length>11){document.getElementById('qtel-err').style.display='block';document.getElementById('qtel').classList.add('err');ok=false;}
-  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('qemail-err').style.display='block';document.getElementById('qemail').classList.add('err');ok=false;}
-  if(!pat){document.getElementById('qpatrimonio-err').style.display='block';ok=false;}
-  if(!ok) return;
-
-  const btn=document.getElementById('qbtn');
-  btn.disabled=true; btn.textContent='Enviando...';
-
-  const pv=pat.value;
-  const s=window._calcState;
-  const ctxLines=['Faixa patrimônio: '+pat.parentElement.textContent.trim()];
-  if(s && s.pat>0){
-    ctxLines.push('Simulação: patrimônio '+fmtBRLnice(s.pat)+' em '+s.ufNome+' ('+s.uf+')');
-    ctxLines.push('Estimativa de custo: '+fmtBRLnice(s.totMin)+' a '+fmtBRLnice(s.totMax));
-    ctxLines.push('Economia possível: '+fmtBRLnice(s.eco));
-    ctxLines.push('Cenário: '+(s.proc==='jud'?'judicial':'extrajudicial')+(s.conf?' com conflito familiar':''));
-  }
-  const ctx=ctxLines.join(' | ');
-
-  // Pixel/CAPI só pra leads qualificados
-  if(pv!=='menos500k'){
-    sendCapi('Lead',{});
-    window.dataLayer=window.dataLayer||[];
-    window.dataLayer.push({event:'lead_qualified',patrimonio_faixa:pv});
-  } else {
-    window.dataLayer=window.dataLayer||[];
-    window.dataLayer.push({event:'lead_ebook',patrimonio_faixa:'menos500k'});
-  }
-
-  fetch('https://crm.mck.agenciaever.cloud/api/leads/publico',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      formulario_slug: pv==='menos500k' ? 'dna_pps_ebook' : 'dna_pps',
-      nome, whatsapp:tel, email, contexto:ctx,
-      landing_page: window.location.href
-    })
-  }).catch(()=>{}).finally(()=>{
-    document.getElementById('qform-wrap').style.display='none';
-
-    if(pv==='menos500k'){
-      document.getElementById('qthanks-ebook').style.display='block';
-    } else {
-      let msg='Olá! Me chamo '+nome+'. ';
-      if(s && s.pat>0){
-        msg += 'Simulei meu inventário: patrimônio '+fmtBRLnice(s.pat)+' em '+s.ufNome+', estimativa de custo entre '+fmtBRLnice(s.totMin)+' e '+fmtBRLnice(s.totMax)+'. ';
-      }
-      msg += 'Quero fazer uma simulação com especialistas da DNA.';
-      window.open('https://api.whatsapp.com/send?phone='+PHONE+'&text='+encodeURIComponent(msg), '_blank');
-      document.getElementById('qthanks-padrao').style.display='block';
-    }
-  });
-});
-
-/* ===================== ANIMAÇÕES REMOVIDAS — site estático ===================== */
+  if (document.readyState === 'complete') { arm(); }
+  else { window.addEventListener('load', arm, {once:true}); }
+})();
 </script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1922595521595366&ev=PageView&noscript=1"/></noscript>
 </body>
 </html>

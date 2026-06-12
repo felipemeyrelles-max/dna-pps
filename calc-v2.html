@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Simulador Inventário v2 — DNA PPS</title>
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700;800&family=Wix+Madefor+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#1b1a16;--darker:#070709;--ouro:#d9b44a;
+  --peri-1:#2e3e72;--peri-2:#4954d8;--peri-3:#6573ee;
+  --red:#e64545;--green:#1aa860;
+  --display:"Wix Madefor Display",sans-serif;
+  --text:"Wix Madefor Text",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--text);color:#fff;background:linear-gradient(180deg,var(--peri-1) 0%,var(--peri-2) 50%,var(--peri-3) 100%);min-height:100vh;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;line-height:1.2;letter-spacing:-.01em}
+.wrap{max-width:1080px;margin:0 auto;padding:clamp(28px,5vw,60px) clamp(18px,4vw,40px)}
+
+/* Top bar */
+.topbar{background:rgba(0,0,0,.22);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.08);padding:14px 0}
+.topbar .wrap{padding-top:0;padding-bottom:0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.topbar .brand{display:flex;align-items:center;gap:12px;color:#fff;font-family:var(--display)}
+.topbar .brand img{height:42px;width:auto}
+.topbar .brand .bt{font-size:.92rem;line-height:1.2;opacity:.85}
+.topbar .v2{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;background:rgba(217,180,74,.18);border:1px solid rgba(217,180,74,.35);border-radius:50px;color:var(--ouro);font-weight:600}
+
+/* Header */
+.head{text-align:center;margin-bottom:clamp(20px,3vw,32px)}
+.head h1{font-size:clamp(1.25rem,2.2vw,1.7rem);font-weight:500;max-width:780px;margin:0 auto 14px;line-height:1.3}
+.head .sub{max-width:680px;margin:0 auto;font-size:1rem;color:rgba(255,255,255,.78);line-height:1.55}
+
+/* Prompt highlight */
+.prompt{text-align:center;max-width:740px;margin:0 auto clamp(28px,4vw,40px);background:rgba(255,255,255,.13);border:1.5px solid rgba(255,255,255,.32);border-radius:14px;padding:18px 26px;font-size:clamp(1.05rem,1.6vw,1.18rem);font-weight:600;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.prompt small{display:block;margin-top:6px;font-size:.84rem;font-weight:400;color:rgba(255,255,255,.78)}
+
+/* Form */
+.calc{max-width:920px;margin:0 auto}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.row.two{grid-template-columns:1fr 1fr}
+.row.full{grid-template-columns:1fr}
+.fld{display:flex;flex-direction:column;gap:7px;text-align:left}
+.fld label{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.92)}
+.fld label small{display:block;font-weight:400;font-size:.72rem;color:rgba(255,255,255,.6);margin-top:2px}
+.fld input,.fld select{width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.28);border-radius:11px;padding:13px 15px;color:#fff;font-family:var(--text);font-size:1rem;font-weight:500;outline:none;transition:border-color .15s,background .15s}
+.fld input::placeholder{color:rgba(255,255,255,.45);font-weight:400}
+.fld input:focus,.fld select:focus{border-color:var(--ouro);background:rgba(255,255,255,.16)}
+.fld select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:42px}
+.fld select option{color:#1a1a1a}
+
+/* Radio chip group */
+.radios{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.radios label{display:flex;align-items:center;gap:9px;padding:11px 14px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);border-radius:11px;cursor:pointer;font-size:.94rem;color:rgba(255,255,255,.85);transition:.15s;user-select:none;font-weight:500}
+.radios label::before{content:'';width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);flex-shrink:0;transition:.15s;background:transparent}
+.radios label:hover{border-color:rgba(217,180,74,.55);background:rgba(217,180,74,.08)}
+.radios label:has(input:checked){border-color:var(--ouro);background:rgba(217,180,74,.12);color:#fff}
+.radios label:has(input:checked)::before{border-color:var(--ouro);background:var(--ouro);box-shadow:inset 0 0 0 3px var(--peri-2)}
+.radios input{position:absolute;opacity:0;pointer-events:none}
+
+/* Checkbox conflict */
+.chk{margin-top:6px;display:flex;align-items:center;gap:10px;padding:13px 16px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);border-radius:11px;cursor:pointer;user-select:none;transition:.15s}
+.chk:hover{border-color:rgba(217,180,74,.45)}
+.chk.on{border-color:var(--ouro);background:rgba(217,180,74,.1)}
+.chk input{width:18px;height:18px;accent-color:var(--ouro);cursor:pointer}
+.chk span{font-size:.94rem;font-weight:500;color:rgba(255,255,255,.92);line-height:1.4}
+.chk span small{display:block;font-size:.78rem;color:rgba(255,255,255,.6);font-weight:400;margin-top:2px}
+
+/* Range result */
+.range-banner{margin:clamp(26px,4vw,38px) 0 22px;background:linear-gradient(135deg,#0b0b0d 0%,#13132a 100%);border:1.5px solid rgba(217,180,74,.4);border-radius:18px;padding:clamp(22px,3vw,32px);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.range-banner .lbl{font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ouro);margin-bottom:10px}
+.range-banner .nums{font-family:var(--display);font-size:clamp(1.6rem,3.6vw,2.4rem);font-weight:800;line-height:1.15;color:#fff;margin-bottom:8px}
+.range-banner .nums .from,.range-banner .nums .to{color:var(--red)}
+.range-banner .nums .sep{color:rgba(255,255,255,.5);font-weight:400;margin:0 8px}
+.range-banner .note{font-size:.88rem;color:rgba(255,255,255,.7);max-width:560px;margin:0 auto;line-height:1.55}
+
+/* Breakdown columns */
+.bd{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;border-radius:16px;overflow:hidden}
+.bd .col{padding:22px 22px 24px;background:#fff;color:#222;display:flex;flex-direction:column;gap:12px}
+.bd .col.inv{background:linear-gradient(180deg,#3a3a3e,#2a2a2e);color:#fff}
+.bd .col h4{font-size:.88rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ouro);margin-bottom:4px}
+.bd .col.plan h4{color:#0f7a43}
+.bd .item{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:.94rem;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.bd .col.plan .item{border-bottom-color:rgba(0,0,0,.06)}
+.bd .item:last-of-type{border-bottom:0}
+.bd .item .k{opacity:.85}
+.bd .item .v{font-weight:600;white-space:nowrap}
+.bd .tot{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding-top:14px;border-top:2px solid rgba(255,255,255,.18)}
+.bd .col.plan .tot{border-top-color:rgba(0,0,0,.12)}
+.bd .tot .k{font-size:.85rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.bd .tot .v{font-family:var(--display);font-size:1.5rem;font-weight:800}
+.bd .col.inv .tot .v{color:#fff}
+.bd .col.plan .tot .v{color:var(--green)}
+
+/* Economia */
+.eco{background:rgba(217,180,74,.13);border:1.5px solid rgba(217,180,74,.45);border-radius:14px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.eco .lbl{font-size:.96rem;font-weight:600;color:rgba(255,255,255,.88)}
+.eco .lbl small{display:block;font-size:.78rem;font-weight:400;color:rgba(255,255,255,.65);margin-top:3px}
+.eco .big{font-family:var(--display);font-size:clamp(1.4rem,2.8vw,2rem);font-weight:800;color:var(--ouro);text-align:right;line-height:1.1}
+.eco .pct{font-size:.84rem;color:rgba(255,255,255,.72);margin-top:3px}
+
+/* CTA */
+.cta-wa{text-align:center;margin:clamp(22px,3vw,30px) 0 10px}
+.cta-wa a{display:inline-flex;align-items:center;gap:14px;background:#25d366;color:#fff;font-family:var(--display);font-weight:700;font-size:1.08rem;padding:18px 36px;border-radius:14px;text-decoration:none;box-shadow:0 10px 28px rgba(37,211,102,.32);transition:.18s}
+.cta-wa a:hover{background:#1fbf5b;transform:translateY(-2px);box-shadow:0 14px 36px rgba(37,211,102,.42)}
+.cta-wa a svg{width:24px;height:24px;fill:currentColor}
+.cta-wa .sub{display:block;margin-top:10px;font-size:.82rem;color:rgba(255,255,255,.68)}
+
+/* Disclaimer */
+.disc{max-width:740px;margin:24px auto 0;font-size:.76rem;line-height:1.6;color:rgba(255,255,255,.55);text-align:center}
+
+@media(max-width:720px){
+  .row,.row.two{grid-template-columns:1fr}
+  .bd{grid-template-columns:1fr}
+  .eco{flex-direction:column;align-items:flex-start;text-align:left}
+  .eco .big{text-align:left}
+}
+
+/* ── POPUP QUALIFICAÇÃO ── */
+#qpopup{position:fixed;inset:0;background:rgba(7,7,9,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+#qpopup.open{display:flex}
+.qcard{background:linear-gradient(160deg,#1e1c11 0%,#13110a 55%,#0d0b06 100%);border:1px solid rgba(217,180,74,.22);border-radius:20px;width:100%;max-width:490px;padding:0;position:relative;max-height:92vh;overflow-y:auto;box-shadow:0 0 0 1px rgba(217,180,74,.07) inset,0 1px 0 rgba(217,180,74,.18) inset,0 32px 80px rgba(0,0,0,.75),0 8px 32px rgba(0,0,0,.5)}
+.qcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 0%,rgba(217,180,74,.6) 25%,#d9b44a 50%,rgba(217,180,74,.6) 75%,transparent 100%);z-index:1;pointer-events:none}
+@media(max-width:480px){.qcard{border-radius:16px}}
+.qcard-header{padding:28px 28px 0;display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.qcard-icon{width:38px;height:38px;background:rgba(217,180,74,.1);border:1px solid rgba(217,180,74,.28);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qcard-icon svg{width:19px;height:19px;fill:none;stroke:#d9b44a;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.qcard h3{font-family:var(--display);font-size:19px;font-weight:700;color:#fff;margin:0 0 3px;letter-spacing:-.01em;line-height:1.25}
+.qcard-subtitle{color:rgba(255,255,255,.5);font-size:12.5px;margin:0;line-height:1.5;font-family:var(--display)}
+.qcard-prefill{margin:14px 28px 0;padding:11px 14px;background:rgba(217,180,74,.08);border:1px solid rgba(217,180,74,.22);border-radius:10px;font-size:12.5px;color:rgba(217,180,74,.85);font-family:var(--display);line-height:1.45;display:flex;gap:8px;align-items:flex-start}
+.qcard-prefill::before{content:'✓';color:#d9b44a;font-weight:700;flex-shrink:0}
+#qform-wrap{padding:16px 28px 28px}
+.qfield{margin-bottom:16px}
+.qfield>label{display:block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(217,180,74,.6);margin-bottom:7px;font-family:var(--display)}
+.qfield input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px;font-size:15px;color:#fff;font-family:var(--display);outline:none;transition:border-color .2s,background .2s,box-shadow .2s}
+.qfield input:focus{border-color:rgba(217,180,74,.5);background:rgba(255,255,255,.07);box-shadow:0 0 0 3px rgba(217,180,74,.08)}
+.qfield input::placeholder{color:rgba(255,255,255,.22)}
+.qfield input.err{border-color:rgba(220,60,60,.5)!important}
+.qerr{display:none;font-size:11.5px;color:#e06060;margin-top:5px;font-family:var(--display)}
+.qpatrimoniogroup{margin-bottom:20px}
+.qflabel{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(217,180,74,.6);margin-bottom:10px;font-family:var(--display)}
+.qropts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qrlabel{display:flex;align-items:center;gap:9px;padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:10px;cursor:pointer;font-size:13.5px;color:rgba(255,255,255,.65);transition:.2s;font-family:var(--display);user-select:none;position:relative;line-height:1.2}
+.qrlabel::before{content:'';width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0;transition:.2s;background:transparent}
+.qrlabel:hover{border-color:rgba(217,180,74,.35);background:rgba(217,180,74,.06);color:rgba(255,255,255,.85)}
+.qrlabel:hover::before{border-color:rgba(217,180,74,.5)}
+.qrlabel:has(input:checked){border-color:rgba(217,180,74,.6);background:rgba(217,180,74,.1);color:#d9b44a;font-weight:600}
+.qrlabel:has(input:checked)::before{border-color:#d9b44a;background:#d9b44a;box-shadow:inset 0 0 0 4px #13110a}
+.qrlabel input[type=radio]{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.qclose{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:2;padding:0;line-height:1;font-family:inherit}
+.qclose:hover{background:rgba(255,255,255,.13);color:#fff}
+.qsubmit{width:100%;background:linear-gradient(135deg,#d9b44a 0%,#c19535 100%);color:#0d0b06;border:none;border-radius:12px;font-size:15px;font-weight:700;padding:15px;cursor:pointer;margin-top:4px;transition:.2s;font-family:var(--display);letter-spacing:.02em;box-shadow:0 4px 24px rgba(217,180,74,.3)}
+.qsubmit:hover{opacity:.92;transform:translateY(-1px);box-shadow:0 6px 32px rgba(217,180,74,.4)}
+.qsubmit:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.qtrust{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:12px;font-size:11px;color:rgba(255,255,255,.25);font-family:var(--display)}
+.qthanks{display:none;text-align:center;padding:44px 28px 40px}
+.qthanks .qti{font-size:40px;margin-bottom:14px}
+.qthanks h4{font-size:21px;font-weight:700;color:#fff;margin:0 0 8px;font-family:var(--display)}
+.qthanks p{color:rgba(255,255,255,.5);font-size:14.5px;margin:0 0 22px;line-height:1.6}
+.qthanks .qebookbtn{display:inline-block;background:linear-gradient(135deg,#d9b44a,#c19535);color:#0d0b06;border-radius:10px;padding:13px 28px;font-weight:700;font-size:15px;text-decoration:none;font-family:var(--display);margin-bottom:14px;box-shadow:0 4px 20px rgba(217,180,74,.3)}
+.qthanks .qfechar{display:block;font-size:13px;color:rgba(255,255,255,.28);cursor:pointer;text-decoration:none;margin-top:6px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <img src="assets/logo-dna.png" alt="DNA PPS">
+      <div class="bt">Planejamento Patrimonial<br>e Sucessório</div>
+    </div>
+    <div class="v2">Calculadora v2 — Preview</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="head">
+    <h1>Veja uma simulação dos gastos de um inventário e o impacto do Planejamento Patrimonial e Sucessório</h1>
+    <p class="sub">Cálculo estimado por estado, tipo de processo e composição patrimonial. A faixa apresentada reflete a variação entre o melhor e o pior cenário.</p>
+  </div>
+
+  <div class="prompt">
+    Preencha os campos abaixo e descubra quanto sua família pode gastar
+    <small>Simulação gratuita e imediata — considera ITCMD, honorários, custas e ganho de capital.</small>
+  </div>
+
+  <div class="calc">
+
+    <div class="row">
+      <div class="fld">
+        <label for="cv">Patrimônio em imóveis<small>Valor de mercado</small></label>
+        <input id="cv" type="text" inputmode="numeric" placeholder="R$ 4.000.000,00" autocomplete="off">
+      </div>
+      <div class="fld">
+        <label for="co">Outros bens (empresa / investimentos)<small>Opcional</small></label>
+        <input id="co" type="text" inputmode="numeric" placeholder="R$ 0,00" autocomplete="off">
+      </div>
+      <div class="fld">
+        <label for="cuf">Estado (UF)<small>Define a alíquota de ITCMD</small></label>
+        <select id="cuf"></select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="fld">
+        <label for="ch">Nº de herdeiros<small>Afeta o tempo de partilha</small></label>
+        <select id="ch">
+          <option value="1">1 herdeiro</option>
+          <option value="2" selected>2 herdeiros</option>
+          <option value="3">3 herdeiros</option>
+          <option value="4">4 ou mais</option>
+        </select>
+      </div>
+      <div class="fld">
+        <label>Tipo de inventário esperado<small>Define honorários e custas</small></label>
+        <div class="radios">
+          <label><input type="radio" name="proc" value="extra" checked>Extrajudicial</label>
+          <label><input type="radio" name="proc" value="jud">Judicial</label>
+        </div>
+      </div>
+      <div class="fld">
+        <label for="cd">Valor declarado no IR<small>Opcional — reduz a base do planejamento</small></label>
+        <input id="cd" type="text" inputmode="numeric" placeholder="R$ 800.000,00" autocomplete="off">
+      </div>
+    </div>
+
+    <label class="chk" id="chkConf">
+      <input type="checkbox" id="conflito">
+      <span>Há risco de conflito familiar (testamento, partilha contestada, ex-cônjuge)
+        <small>Aciona cenário judicial e adiciona custo de litígio.</small>
+      </span>
+    </label>
+
+    <!-- RESULT BANNER -->
+    <div class="range-banner">
+      <div class="lbl">Estimativa de custo total do inventário</div>
+      <div class="nums"><span class="from" id="rmin">—</span><span class="sep">a</span><span class="to" id="rmax">—</span></div>
+      <div class="note" id="rnote">Faixa entre cenário mais limpo (extrajudicial, sem litígio) e cenário completo (judicial, com honorários e ganho de capital).</div>
+    </div>
+
+    <!-- BREAKDOWN -->
+    <div class="bd">
+      <div class="col inv">
+        <h4>Inventário tradicional · pior cenário</h4>
+        <div class="item"><span class="k">ITCMD (alíquota <span id="aliqLabel">—</span>)</span><span class="v" id="invItcmd">—</span></div>
+        <div class="item"><span class="k">Honorários advocatícios</span><span class="v" id="invHon">—</span></div>
+        <div class="item"><span class="k">Custas / emolumentos</span><span class="v" id="invCust">—</span></div>
+        <div class="item"><span class="k">Ganho de capital (IR espólio)</span><span class="v" id="invGc">—</span></div>
+        <div class="tot"><span class="k">Total estimado</span><span class="v" id="invTot">—</span></div>
+      </div>
+      <div class="col plan">
+        <h4>Planejamento Patrimonial</h4>
+        <div class="item"><span class="k">ITCMD na doação com usufruto</span><span class="v" id="planItcmd">—</span></div>
+        <div class="item"><span class="k">Custo de estruturação (one-time)</span><span class="v" id="planEst">—</span></div>
+        <div class="item"><span class="k">Sem honorários sucessórios</span><span class="v">R$ 0,00</span></div>
+        <div class="item"><span class="k">Sem ganho de capital imediato</span><span class="v">R$ 0,00</span></div>
+        <div class="tot"><span class="k">Total estimado</span><span class="v" id="planTot">—</span></div>
+      </div>
+    </div>
+
+    <div class="eco">
+      <div class="lbl">Economia estimada
+        <small>Comparando pior cenário do inventário × planejamento</small>
+      </div>
+      <div>
+        <div class="big" id="ecoVal">—</div>
+        <div class="pct" id="ecoPct"></div>
+      </div>
+    </div>
+
+    <div class="cta-wa">
+      <a href="#" onclick="openModal();return false;">
+        <svg viewBox="0 0 32 32"><path d="M16 .4C7.4.4.4 7.4.4 16c0 2.8.7 5.4 2 7.8L.3 31.7l8.1-2.1c2.3 1.2 4.9 1.9 7.6 1.9 8.6 0 15.6-7 15.6-15.6S24.6.4 16 .4zm0 28.4c-2.5 0-4.8-.7-6.8-1.8l-.5-.3-4.8 1.3 1.3-4.7-.3-.5c-1.3-2-2-4.4-2-6.9C2.6 8.6 8.6 2.6 16 2.6S29.4 8.6 29.4 16 23.4 28.8 16 28.8zm7.4-9.7c-.4-.2-2.4-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.4-2.2-2.8-.2-.4 0-.6.2-.8.2-.2.4-.4.5-.7.2-.2.2-.4.4-.6.1-.2.1-.5 0-.7-.1-.2-.9-2.2-1.3-3-.3-.7-.6-.6-.9-.6h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1 0 1.8 1.3 3.6 1.5 3.8.2.2 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.4-1 2.7-1.9.3-.9.3-1.7.2-1.9-.1-.2-.3-.3-.7-.5z"/></svg>
+        Quero o cálculo exato com especialista
+      </a>
+      <span class="sub">Vamos pedir seu contato e usar os dados da simulação pra te atender.</span>
+    </div>
+
+    <p class="disc">Valores estimados com base em alíquotas de ITCMD por estado, tabelas típicas de honorários advocatícios (OAB), emolumentos cartoriais médios e regras de IR sobre ganho de capital do espólio. A simulação não substitui análise jurídica/contábil individual. Confirme com a equipe DNA PPS o cálculo aplicável ao seu caso.</p>
+
+  </div>
+</div>
+
+<!-- ============== POPUP QUALIFICAÇÃO ============== -->
+<div id="qpopup" role="dialog" aria-modal="true" aria-labelledby="qpopup-title">
+  <div class="qcard">
+    <button class="qclose" onclick="closeModal()" aria-label="Fechar">&times;</button>
+    <div class="qcard-header">
+      <div class="qcard-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+      </div>
+      <div>
+        <h3 id="qpopup-title">Simule seu planejamento</h3>
+        <p class="qcard-subtitle">Nossos consultores entram em contato pelo WhatsApp</p>
+      </div>
+    </div>
+    <div class="qcard-prefill" id="qPrefillSummary"></div>
+    <div id="qform-wrap">
+      <form id="qform" novalidate>
+        <div class="qfield">
+          <label for="qnome">Nome completo</label>
+          <input type="text" id="qnome" placeholder="Seu nome" autocomplete="name">
+          <div class="qerr" id="qnome-err">Informe seu nome completo</div>
+        </div>
+        <div class="qfield">
+          <label for="qtel">WhatsApp</label>
+          <input type="tel" id="qtel" placeholder="(00) 00000-0000" inputmode="tel" autocomplete="tel">
+          <div class="qerr" id="qtel-err">Informe um número válido com DDD</div>
+        </div>
+        <div class="qfield">
+          <label for="qemail">E-mail</label>
+          <input type="email" id="qemail" placeholder="seu@email.com" autocomplete="email">
+          <div class="qerr" id="qemail-err">Informe um e-mail válido</div>
+        </div>
+        <div class="qpatrimoniogroup">
+          <div class="qflabel">Faixa de patrimônio aproximada</div>
+          <div class="qropts">
+            <label class="qrlabel"><input type="radio" name="patrimonio" value="menos500k">Menos de R$ 500 mil</label>
+            <label class="qrlabel"><input type="radio" name="patrimonio" value="500k1M">R$ 500 mil a R$ 1 milhão</label>
+            <label class="qrlabel"><input type="radio" name="patrimonio" value="1M10M">R$ 1 milhão a R$ 10 milhões</label>
+            <label class="qrlabel"><input type="radio" name="patrimonio" value="acima10M">Acima de R$ 10 milhões</label>
+          </div>
+          <div class="qerr" id="qpatrimonio-err">Selecione sua faixa de patrimônio</div>
+        </div>
+        <button type="submit" class="qsubmit" id="qbtn">Quero meu diagnóstico gratuito →</button>
+        <div class="qtrust"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Consulta protegida e confidencial</div>
+      </form>
+    </div>
+    <div class="qthanks" id="qthanks-padrao">
+      <div class="qti">✅</div>
+      <h4>Recebemos seu contato!</h4>
+      <p>Você foi encaminhado pelo WhatsApp. Caso não tenha aberto, nossos consultores entrarão em contato em breve.</p>
+      <a href="javascript:closeModal()" class="qfechar">Fechar</a>
+    </div>
+    <div class="qthanks" id="qthanks-ebook">
+      <div class="qti">📥</div>
+      <h4>Obrigado pelo interesse!</h4>
+      <p>Preparamos um material exclusivo que mostra como evitar pagar o inventário em dobro. Acesse gratuitamente:</p>
+      <a href="/ebook.pdf" download="5-erros-inventario-DNA-PPS.pdf" class="qebookbtn">Baixar e-book gratuito →</a>
+      <a href="javascript:closeModal()" class="qfechar">Fechar</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const ALIQUOTAS_ITCMD = {
+  AC:{nome:"Acre",aliquota:4}, AL:{nome:"Alagoas",aliquota:4},
+  AP:{nome:"Amapá",aliquota:4}, AM:{nome:"Amazonas",aliquota:2},
+  BA:{nome:"Bahia",aliquota:8}, CE:{nome:"Ceará",aliquota:6},
+  DF:{nome:"Distrito Federal",aliquota:6}, ES:{nome:"Espírito Santo",aliquota:4},
+  GO:{nome:"Goiás",aliquota:4}, MA:{nome:"Maranhão",aliquota:4},
+  MT:{nome:"Mato Grosso",aliquota:4}, MS:{nome:"Mato Grosso do Sul",aliquota:6},
+  MG:{nome:"Minas Gerais",aliquota:5}, PA:{nome:"Pará",aliquota:4},
+  PB:{nome:"Paraíba",aliquota:8}, PR:{nome:"Paraná",aliquota:4},
+  PE:{nome:"Pernambuco",aliquota:5}, PI:{nome:"Piauí",aliquota:4},
+  RJ:{nome:"Rio de Janeiro",aliquota:8}, RN:{nome:"Rio Grande do Norte",aliquota:4},
+  RS:{nome:"Rio Grande do Sul",aliquota:6}, RO:{nome:"Rondônia",aliquota:4},
+  RR:{nome:"Roraima",aliquota:4}, SC:{nome:"Santa Catarina",aliquota:8},
+  SP:{nome:"São Paulo",aliquota:4}, SE:{nome:"Sergipe",aliquota:4},
+  TO:{nome:"Tocantins",aliquota:4}
+};
+const UF_PADRAO = "MG";
+const PHONE = "5535996672940";
+
+// Parâmetros de custo
+const HONORARIOS_PCT = 0.10;          // 10% sobre patrimônio (judicial)
+const CUSTAS_EXTRA_PCT = 0.03;        // 3% extrajudicial
+const CUSTAS_JUD_PCT = 0.05;          // 5% judicial
+const GANHO_CAPITAL_PCT = 0.15;       // 15% sobre diferença mercado-IR
+const BASE_IR_PADRAO_PCT = 0.20;      // se IR não preenchido, assume 20% do mercado
+const ESTRUTURACAO_PCT = 0.025;       // 2.5% estruturação holding/doação
+const LITIGIO_BOOST = 1.25;           // +25% no max se conflito
+const PLAN_ITCMD_FRAC = 2/3;          // base do plano = 2/3 do IR (doação c/ usufruto SP)
+
+const fmtBRL = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const fmtBRLnice = v => Math.round(v).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});
+const fmtPct = v => (Number.isInteger(v)? v : v.toFixed(1).replace(".",",")) + "%";
+const soDig = s => (s||"").replace(/\D/g,"");
+const num = s => { const d=soDig(s); return d?parseInt(d,10)/100:0; };
+function mask(el){el.addEventListener("input",()=>{const n=num(el.value);el.value=n>0?fmtBRL(n):"";calc();});}
+
+const selUF=document.getElementById("cuf");
+Object.keys(ALIQUOTAS_ITCMD).sort((a,b)=>ALIQUOTAS_ITCMD[a].nome.localeCompare(ALIQUOTAS_ITCMD[b].nome,"pt-BR")).forEach(uf=>{
+  const o=document.createElement("option");
+  o.value=uf;o.textContent=`${ALIQUOTAS_ITCMD[uf].nome} (${uf}) — ${fmtPct(ALIQUOTAS_ITCMD[uf].aliquota)}`;
+  selUF.appendChild(o);
+});
+selUF.value=UF_PADRAO;
+
+const cv=document.getElementById("cv"),co=document.getElementById("co"),cd=document.getElementById("cd");
+mask(cv);mask(co);mask(cd);
+selUF.addEventListener("change",calc);
+document.getElementById("ch").addEventListener("change",calc);
+document.querySelectorAll('input[name=proc]').forEach(r=>r.addEventListener("change",calc));
+const chkConf=document.getElementById("conflito");
+chkConf.addEventListener("change",()=>{
+  document.getElementById("chkConf").classList.toggle("on",chkConf.checked);
+  if(chkConf.checked){document.querySelector('input[name=proc][value=jud]').checked=true;}
+  calc();
+});
+
+const set=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
+
+function calc(){
+  const imoveis=num(cv.value), outros=num(co.value), ir=num(cd.value);
+  const pat = imoveis+outros;
+  const uf=selUF.value, aPct=ALIQUOTAS_ITCMD[uf].aliquota, a=aPct/100;
+  const proc=document.querySelector('input[name=proc]:checked').value;
+  const conf=chkConf.checked;
+  const procEff = conf ? "jud" : proc;
+
+  if(pat<=0){
+    ["rmin","rmax","invItcmd","invHon","invCust","invGc","invTot","planItcmd","planEst","planTot","ecoVal"].forEach(id=>set(id,"—"));
+    set("aliqLabel","—");set("ecoPct","");set("rnote","Preencha o patrimônio para ver a estimativa.");
+    window._calcState = null;
+    return;
+  }
+
+  // Bases comuns
+  const itcmdInv = pat * a;
+  const baseIR = ir>0 ? ir : pat * BASE_IR_PADRAO_PCT;
+  const gcBase = Math.max(0, pat - baseIR);
+
+  // FAIXA — sempre full spectrum (independe da seleção)
+  // Min = melhor caso possível: extrajudicial limpo, ganho cap em alíquota mínima
+  let totMin = itcmdInv + (pat * CUSTAS_EXTRA_PCT) + (gcBase * 0.15);
+  // Max = pior caso possível: judicial com honorários, custas, ganho cap em alíquota máxima
+  let totMax = itcmdInv + (pat * HONORARIOS_PCT) + (pat * CUSTAS_JUD_PCT) + (gcBase * 0.225);
+  if(conf) totMax *= LITIGIO_BOOST;
+
+  // BREAKDOWN — reflete o cenário esperado pelo usuário (radio + conflito)
+  const hon = procEff==="jud" ? pat * HONORARIOS_PCT : 0;
+  const cust = procEff==="jud" ? pat * CUSTAS_JUD_PCT : pat * CUSTAS_EXTRA_PCT;
+  const gc = gcBase * GANHO_CAPITAL_PCT;
+  let totBd = itcmdInv + hon + cust + gc;
+  if(conf) totBd *= LITIGIO_BOOST;
+
+  // Planejamento Patrimonial
+  const itcmdPlan = baseIR * PLAN_ITCMD_FRAC * a;
+  const estrut = pat * ESTRUTURACAO_PCT;
+  const totPlan = itcmdPlan + estrut;
+
+  // Economia (vs cenário esperado do usuário)
+  const eco = Math.max(0, totBd - totPlan);
+  const ecoPct = totBd>0 ? eco/totBd*100 : 0;
+
+  set("aliqLabel", fmtPct(aPct));
+  set("rmin", fmtBRLnice(totMin));
+  set("rmax", fmtBRLnice(totMax));
+  set("rnote", `Faixa baseada em patrimônio total de ${fmtBRLnice(pat)} em ${ALIQUOTAS_ITCMD[uf].nome} (${uf}). Mínimo = extrajudicial sem litígio. Máximo = ${procEff==="jud"?"judicial":"extrajudicial"} com todos os custos${conf?" + conflito familiar":""}.`);
+
+  set("invItcmd", fmtBRLnice(itcmdInv));
+  set("invHon", procEff==="jud" ? fmtBRLnice(hon) : "Não se aplica");
+  set("invCust", fmtBRLnice(cust));
+  set("invGc", fmtBRLnice(gc));
+  set("invTot", fmtBRLnice(totBd));
+
+  set("planItcmd", fmtBRLnice(itcmdPlan));
+  set("planEst", fmtBRLnice(estrut));
+  set("planTot", fmtBRLnice(totPlan));
+
+  set("ecoVal", fmtBRLnice(eco));
+  set("ecoPct", ecoPct>0 ? `≈ ${fmtPct(Math.round(ecoPct))} menos que o inventário` : "");
+
+  // Guarda estado pra usar no popup
+  window._calcState = {
+    pat, uf, ufNome: ALIQUOTAS_ITCMD[uf].nome,
+    totMin, totMax, totBd, eco, proc: procEff, conf,
+    imoveis, outros, ir
+  };
+}
+
+// Defaults
+cv.value=fmtBRL(4000000);
+co.value=fmtBRL(0);
+cd.value=fmtBRL(800000);
+calc();
+
+/* ============== POPUP QUALIFICAÇÃO ============== */
+function patrimonioBracket(pat){
+  if(pat < 500000) return "menos500k";
+  if(pat < 1000000) return "500k1M";
+  if(pat <= 10000000) return "1M10M";
+  return "acima10M";
+}
+
+function openModal(){
+  const s = window._calcState;
+  const prefill = document.getElementById('qPrefillSummary');
+  if(s && s.pat > 0){
+    // Pré-seleciona faixa pelo patrimônio
+    const bracket = patrimonioBracket(s.pat);
+    const radio = document.querySelector(`input[name=patrimonio][value=${bracket}]`);
+    if(radio) radio.checked = true;
+    prefill.style.display = 'flex';
+    prefill.innerHTML = '<span><strong>Sua simulação:</strong> patrimônio de '+fmtBRLnice(s.pat)+' em '+s.ufNome+' · estimativa '+fmtBRLnice(s.totMin)+' a '+fmtBRLnice(s.totMax)+'</span>';
+  } else {
+    prefill.style.display = 'none';
+  }
+  document.getElementById('qpopup').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('qpopup').classList.remove('open');
+  document.body.style.overflow='';
+  document.getElementById('qform-wrap').style.display='';
+  document.getElementById('qthanks-padrao').style.display='none';
+  document.getElementById('qthanks-ebook').style.display='none';
+  document.querySelectorAll('.qerr').forEach(e=>e.style.display='none');
+  document.querySelectorAll('.qfield input').forEach(i=>i.classList.remove('err'));
+  const btn=document.getElementById('qbtn');
+  btn.disabled=false;
+  btn.textContent='Quero meu diagnóstico gratuito →';
+}
+document.getElementById('qpopup').addEventListener('click', e=>{if(e.target.id==='qpopup') closeModal();});
+document.addEventListener('keydown', e=>{if(e.key==='Escape') closeModal();});
+
+document.getElementById('qtel').addEventListener('input', function(){
+  let v=this.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>10) v=v.replace(/^(\d{2})(\d{5})(\d{4}).*/,'($1) $2-$3');
+  else if(v.length>6) v=v.replace(/^(\d{2})(\d{4})(\d*)/,'($1) $2-$3');
+  else if(v.length>2) v=v.replace(/^(\d{2})(\d*)/,'($1) $2');
+  this.value=v;
+});
+
+document.getElementById('qform').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  const nome=document.getElementById('qnome').value.trim();
+  const tel=document.getElementById('qtel').value.trim();
+  const email=document.getElementById('qemail').value.trim();
+  const pat=document.querySelector('input[name=patrimonio]:checked');
+  let ok=true;
+  document.querySelectorAll('.qerr').forEach(e=>e.style.display='none');
+  document.querySelectorAll('.qfield input').forEach(i=>i.classList.remove('err'));
+
+  if(!nome){document.getElementById('qnome-err').style.display='block';document.getElementById('qnome').classList.add('err');ok=false;}
+  const td=tel.replace(/\D/g,'');
+  if(td.length<10||td.length>11){document.getElementById('qtel-err').style.display='block';document.getElementById('qtel').classList.add('err');ok=false;}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('qemail-err').style.display='block';document.getElementById('qemail').classList.add('err');ok=false;}
+  if(!pat){document.getElementById('qpatrimonio-err').style.display='block';ok=false;}
+  if(!ok) return;
+
+  const btn=document.getElementById('qbtn');
+  btn.disabled=true; btn.textContent='Enviando...';
+
+  const pv=pat.value;
+  const s=window._calcState;
+  const ctxLines=['Faixa patrimônio: '+pat.parentElement.textContent.trim()];
+  if(s && s.pat>0){
+    ctxLines.push('Simulação: patrimônio '+fmtBRLnice(s.pat)+' em '+s.ufNome+' ('+s.uf+')');
+    ctxLines.push('Estimativa de custo: '+fmtBRLnice(s.totMin)+' a '+fmtBRLnice(s.totMax));
+    ctxLines.push('Economia possível: '+fmtBRLnice(s.eco));
+    ctxLines.push('Cenário: '+(s.proc==='jud'?'judicial':'extrajudicial')+(s.conf?' com conflito familiar':''));
+  }
+  const ctx=ctxLines.join(' | ');
+
+  fetch('https://crm.mck.agenciaever.cloud/api/leads/publico',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      formulario_slug: pv==='menos500k' ? 'dna_pps_ebook' : 'dna_pps',
+      nome, whatsapp:tel, email, contexto:ctx,
+      landing_page: window.location.href
+    })
+  }).catch(()=>{}).finally(()=>{
+    document.getElementById('qform-wrap').style.display='none';
+
+    // Routing
+    if(pv==='menos500k'){
+      document.getElementById('qthanks-ebook').style.display='block';
+    } else {
+      // WhatsApp com dados da simulação
+      let msg='Olá! Me chamo '+nome+'. ';
+      if(s && s.pat>0){
+        msg += 'Simulei meu inventário: patrimônio '+fmtBRLnice(s.pat)+' em '+s.ufNome+', estimativa de custo entre '+fmtBRLnice(s.totMin)+' e '+fmtBRLnice(s.totMax)+'. ';
+      }
+      msg += 'Quero fazer uma simulação com especialistas da DNA.';
+      const phone = '5535996672940';
+      window.open('https://api.whatsapp.com/send?phone='+phone+'&text='+encodeURIComponent(msg), '_blank');
+      document.getElementById('qthanks-padrao').style.display='block';
+    }
+  });
+});
+</script>
+</body>
+</html>
