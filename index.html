@@ -313,10 +313,6 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
 </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CNV4XH5"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
 <!-- ===================== HEADER ===================== -->
 <header>
@@ -689,16 +685,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <!-- =====================================================================
-     Tracking — arquitetura clean:
-       Browser-side Pixel  → 100% via GTM (configurar no dashboard)
-       Server-side  CAPI   → 100% via /api/capi (este script)
-       Dedup browser↔CAPI  → event_id passado via dataLayer (GTM lê em
-                             Custom Event Trigger e injeta no fbq)
-     Nenhum fbq inline aqui — evita conflito com tags do GTM.
+     Tracking — fonte única:
+       Browser-side Pixel  → inline (este script)
+       Server-side  CAPI   → /api/capi (sendCapi)
+       Dedup browser↔CAPI  → event_id em fbq('track', X, cd, {eventID})
+                             e payload CAPI usa o mesmo event_id.
+     SEM GTM (removido — estava duplicando PageView 3x).
      ===================================================================== -->
 <script>
 (function(){
   window.dataLayer = window.dataLayer || [];
+
+  // fbq queue stub (calls antes do fbevents.js carregar ficam na fila)
+  (function(f){
+    if(f.fbq) return;
+    var n = f.fbq = function(){ n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+    if(!f._fbq) f._fbq = n;
+    n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
+  })(window);
 
   function getCookie(name){
     var m = document.cookie.match('(?:^|;\\s*)' + name + '=([^;]*)');
@@ -725,19 +729,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }catch(e){ return ''; }
   }
 
-  // sendCapi — server-side only + dataLayer pra GTM possivelmente espelhar browser-side
+  // sendCapi — browser Pixel + CAPI server-side com dedup via event_id
   window.sendCapi = function(eventName, userData, customData){
     var eid = 'ev_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
     var cd = customData || {};
     var raw = userData || {};
 
-    // dataLayer event — GTM pode ler meta_event_id pra dedup com Pixel browser-side
-    window.dataLayer.push({
-      event: 'capi_' + eventName.toLowerCase(),
-      meta_event_name: eventName,
-      meta_event_id: eid,
-      meta_custom_data: cd
-    });
+    try{ fbq('track', eventName, cd, {eventID: eid}); }catch(e){}
+
+    window.dataLayer.push({event: 'capi_' + eventName.toLowerCase(), event_id: eid});
 
     Promise.all([
       raw.email ? sha256(raw.email) : Promise.resolve(''),
@@ -770,20 +770,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script src="assets/site.js?v=20260612c" defer></script>
 
-<!-- ===================== GTM loader (deferred) — ÚNICO source browser-side ===================== -->
+<!-- ===================== Pixel loader (deferred, único source) ===================== -->
 <script>
 (function(){
-  function loadGTM(){
-    if(window.__gtmLoaded) return;
-    window.__gtmLoaded = true;
+  function loadPixel(){
+    if(window.__pixelLoaded) return;
+    window.__pixelLoaded = true;
 
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5CNV4XH5');
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://connect.facebook.net/en_US/fbevents.js';
+    (document.head || document.body).appendChild(s);
 
-    // WhatsApp clicks → Contact (server-side via sendCapi + dataLayer pra GTM espelhar)
+    fbq('init', '1922595521595366');
+    fbq('track', 'PageView');
+
+    // WhatsApp clicks → Contact
     document.querySelectorAll('a[href*="553599"],a[href*="wa.me"],.whatsapp-float,.wa,a.wa').forEach(function(el){
       el.addEventListener('click', function(){
         try{ window.sendCapi('Contact', {}, {content_category: 'whatsapp-direto'}); }catch(e){}
@@ -793,13 +795,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   function arm(){
     ['scroll','mousemove','touchstart','keydown','click'].forEach(function(ev){
-      window.addEventListener(ev, loadGTM, {once:true, passive:true});
+      window.addEventListener(ev, loadPixel, {once:true, passive:true});
     });
-    setTimeout(loadGTM, 3000);
+    setTimeout(loadPixel, 3000);
   }
   if(document.readyState === 'complete') arm();
   else window.addEventListener('load', arm, {once:true});
 })();
 </script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=1922595521595366&ev=PageView&noscript=1"/></noscript>
 </body>
 </html>
