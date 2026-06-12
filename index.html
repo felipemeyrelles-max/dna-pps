@@ -809,6 +809,7 @@ footer{background:#0c0d11;padding:clamp(50px,7vw,90px) 0 40px}
     document.querySelectorAll('a[href*="553599"],a[href*="wa.me"],.whatsapp-float,.wa,a.wa').forEach(function(el){
       el.addEventListener('click', function(){
         try{ window.sendCapi('Contact', {}, {content_category: 'whatsapp-direto'}); }catch(e){}
+        try{ window.sendGoogleAdsConversion('zLQkCNiv1fAZEL_g1o0-', {currency: 'BRL'}); }catch(e){}
       });
     });
   }
